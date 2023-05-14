@@ -1,6 +1,6 @@
 <script lang="ts">
     import PunishTable from "$lib/PunishTable.svelte";
-    import SideNav from "$lib/SideNav.svelte";
+    import StatsLevel from "$lib/StatsLevel.svelte";
 </script>
 
 <svelte:head>
@@ -9,7 +9,24 @@
 
 <container class="container">
     <div class="columns is-multiline">
-        <SideNav/>
+        <div class="column is-full content has-text-centered">
+            <h1>TrueOG Staff Pannel</h1>
+            <br><br>
+            <StatsLevel/>
+        </div>
+        <div class="column is-full">
+            <section class="section content">
+                <h5>Player Lookup</h5>
+                <div class="field has-addons">
+                    <div class="control is-expanded">
+                      <input class="input" type="text" placeholder="Enter a player name or UUID">
+                    </div>
+                    <div class="control">
+                        <button class="button is-link">Search</button>
+                    </div>
+                </div>
+            </section>
+        </div>
         <div class="column staffog-gib-padding">
             <h1 class="title has-text-centered">Recent Bans</h1>
             <PunishTable/>
@@ -23,6 +40,7 @@
 
 <style lang="scss">
     .columns {
+        padding-top: 20px;
         padding-right: 12px;
     }
 
