@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+$primary: #ff7582;
+
+$menu-item-color: #ffffff;
+$menu-item-hover-color: #ffffff;
+$menu-item-hover-background-color: #355c7d;
+
+body {
+    height: 100vh;
+}
+
+@import "../node_modules/bulma/bulma.sass";
