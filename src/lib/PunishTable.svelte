@@ -1,3 +1,10 @@
+<script lang="ts">
+    import type { PunishEntry } from '$lib/types';
+    import { getReadableMillis, getReadableDate } from './sharedfuncs';
+
+    export let entryList: Array<PunishEntry>;
+</script>
+
 <div class="box">
     <table class="table is-align-items-center">
         <thead>
@@ -6,34 +13,25 @@
                 <th>Player</th>
                 <th>Reason</th>
                 <th>Duration</th>
-                <th>Banned By</th>
+                <th>Punished By</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th>1</th>
-                <td>BadActor123</td>
-                <td>Cheating (fly)</td>
-                <td>30 days</td>
-                <td>Gx0rge</td>
-                <td>14/05/23 12:00</td>
-                <td>
-                    <button class="button is-primary">Manage</button>
-                </td>
-            </tr>
-            <tr>
-                <th>2</th>
-                <td>BadActor123</td>
-                <td>Cheating (fly)</td>
-                <td>30 days</td>
-                <td>Gx0rge</td>
-                <td>14/05/23 12:00</td>
-                <td>
-                    <button class="button is-primary">Manage</button>
-                </td>
-            </tr>
+            {#each entryList as p}
+                <tr>
+                    <th>{p.id}</th>
+                    <td>{p.name}</td>
+                    <td>{p.reason}</td>
+                    <td>{getReadableMillis(p.until, p.time)}</td>
+                    <td>{p.by_name}</td>
+                    <td>{getReadableDate(p.time)}</td>
+                    <td>
+                        <button class="button is-primary">Manage</button>
+                    </td>
+                </tr>
+            {/each}
         </tbody>
     </table>
 </div>

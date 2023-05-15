@@ -1,6 +1,9 @@
 <script lang="ts">
     import PunishTable from "$lib/PunishTable.svelte";
     import StatsLevel from "$lib/StatsLevel.svelte";
+    import type { PageData } from './$types';
+
+    export let data: PageData;
 </script>
 
 <svelte:head>
@@ -29,11 +32,11 @@
         </div>
         <div class="column staffog-gib-padding">
             <h1 class="title has-text-centered">Recent Bans</h1>
-            <PunishTable/>
+            <PunishTable entryList={data.recentBans}/>
         </div>
         <div class="column staffog-gib-padding">
             <h1 class="title has-text-centered">Recent Mutes</h1>
-            <PunishTable/>
+            <PunishTable entryList={data.recentMutes}/>
         </div>
     </div>
 </container>

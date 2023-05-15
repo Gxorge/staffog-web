@@ -1,9 +1,11 @@
 import { error } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import { getTopTen } from '$lib/server/global';
+import type { PunishEntry } from '$lib/types';
 
 export async function GET({url}) {
 
-    let entry = await getTopTen("staffog_ban");
+    let entry = await getTopTen("staffog_mute");
 
     if (entry == null) {
         return new Response("Server error.", { status: 500});

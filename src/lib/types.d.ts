@@ -1,6 +1,7 @@
 export interface PunishEntry {
     id: bigint,
     uuid: string,
+    name: string,
     reason: string,
 
     by_uuid: string,
