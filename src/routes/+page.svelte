@@ -15,7 +15,7 @@
         <div class="column is-full content has-text-centered">
             <h1>TrueOG Staff Pannel</h1>
             <br><br>
-            <StatsLevel/>
+            <StatsLevel onlineStats={data.onlineStats} punishStats={data.punishStats}/>
         </div>
         <div class="column is-full">
             <section class="section content">

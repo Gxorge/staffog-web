@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
-import type { PunishEntry } from '$lib/types';
+import type { OnlineStats, PunishEntry, PunishStats } from '$lib/types';
 
 export const load = async ({ params, fetch }) => {
 
@@ -22,7 +22,23 @@ export const load = async ({ params, fetch }) => {
         throw error(500, "Could not load recent mutes.")
     }
 
+    const resStats = await fetch("/backend/public/onlinestats");
+    let onlineStats: OnlineStats;
+    if (resStats.status == 200) {
+        onlineStats = await resStats.json();
+    } else {
+        throw error(500, "Could not load online stats.")
+    }
+
+    const resPunStats = await fetch("/backend/punish/stats");
+    let punishStats: PunishStats;
+    if (resPunStats.status == 200) {
+        punishStats = await resPunStats.json();
+    } else {
+        throw error(500, "Could not load punish stats.")
+    }
+
     return {
-        recentBans, recentMutes
+        recentBans, recentMutes, onlineStats, punishStats
     };
 }

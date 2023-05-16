@@ -16,3 +16,16 @@ export interface PunishEntry {
     until: bigint,
     active: number
 }
+
+export interface OnlineStats {
+    online: boolean,
+    players: number,
+    staff: number
+}
+
+export interface PunishStats {
+    total: number,
+    month: number,
+    week: number,
+    day: number
+}

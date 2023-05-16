@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import * as mariadb from "mariadb"; 
-import type { PunishEntry } from "../types";
+import type { OnlineStats, PunishEntry, PunishStats } from "../types";
 dotenv.config();
 
 const dbPool = mariadb.createPool({
@@ -17,7 +17,7 @@ export async function getTopTen(table: string): Promise<Array<PunishEntry> | nul
     try {
         conn = await dbPool.getConnection();
 
-        const result = await conn.query("SELECT * FROM " + table + " ORDER BY id DESC LIMIT 10");
+        const result = await conn.query("SELECT * FROM " + table + " ORDER BY id DESC LIMIT 10;");
         list = (result as Array<PunishEntry>);
 
         if (!list) return null;
@@ -61,5 +61,71 @@ export async function getNameFromUUID(uuid: string): Promise<string | null> {
     }
 
     return name;
+}
+
+export async function getOnlineStats(): Promise<OnlineStats | null> {
+    let conn;
+    let stats: OnlineStats = { online: false, players: 0, staff: 0};
+    try {
+        conn = await dbPool.getConnection();
+
+        const result = await conn.query("SELECT * FROM `staffog_stat`;");
+
+        for (const entry of result) {
+            if (entry.name == "server_status") {
+                stats.online = entry.stat == "online" ? true : false;
+            } else if (entry.name == "player_count") {
+                stats.players = Number(entry.stat);
+            } else if (entry.name == "staff_count") {
+                stats.staff = Number(entry.stat);
+            }
+        }
+
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (conn) conn.release();
+    }
+
+    return stats;
+}
+
+export async function getPunishStats(table: string): Promise<PunishStats | null> {
+    let conn;
+    let stats: PunishStats = { total: 0, month: 0, week: 0, day: 0};
+
+    try {
+        conn = await dbPool.getConnection();
+
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).getTime();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+        const result = await conn.query("SELECT `time` FROM `" + table + "` WHERE `time` >= " + startOfMonth + ";")
+
+        for (const entry of result) {
+            let time = entry.time;
+            if (time >= startOfMonth) {
+              stats.month++;
+              if (time >= startOfWeek) {
+                stats.week++;
+                if (time >= today) {
+                  stats.day++;
+                }
+              }
+            }
+        }
+
+        const countResult = await conn.query("SELECT COUNT(*) FROM `" + table + "`;");
+        stats.total = Number(countResult[0]["COUNT(*)"]);
+
+    } catch (e) {
+        console.log(e);
+    } finally {
+        if (conn) conn.release();
+    }
+
+    return stats;
 }
 
