@@ -1,9 +1,9 @@
-import { error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { getTopTen } from '$lib/server/global';
-import type { PunishEntry } from '$lib/types';
+import { getTopTen, apiCanAccess } from '$lib/server/global';
 
-export async function GET({url}) {
+export async function GET({ cookies }) {
+    if (await apiCanAccess(cookies.get('token')) == false) {
+        return new Response("Unauthorized.", { status: 401 });
+    }
 
     let entry = await getTopTen("staffog_mute");
 

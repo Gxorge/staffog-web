@@ -1,7 +1,9 @@
-import { error } from '@sveltejs/kit';
-import { getTopTen } from '$lib/server/global';
+import { getTopTen, apiCanAccess } from '$lib/server/global';
 
-export async function GET({url}) {
+export async function GET({ cookies }) {
+    if (await apiCanAccess(cookies.get('token')) == false) {
+        return new Response("Unauthorized.", { status: 401 });
+    }
 
     let entry = await getTopTen("staffog_ban");
 

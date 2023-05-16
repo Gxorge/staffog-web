@@ -1,11 +1,14 @@
 <script lang="ts">
-    import "../app.scss";
+    import "$lib/app.scss";
     import SideNav from "$lib/SideNav.svelte";
+    import type { LayoutData } from "./$types";
+
+    export let data: LayoutData;
 </script>
 
 <main>
     <div class="columns">
-        <SideNav/>
+        <SideNav userInfo={data.sessionUser} />
         <div class="column">
             <slot/>
         </div>

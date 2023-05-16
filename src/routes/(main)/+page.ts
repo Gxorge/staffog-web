@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import type { OnlineStats, PunishEntry, PunishStats } from '$lib/types';
 
-export const load = async ({ params, fetch }) => {
+export const load = async ({ params, fetch, }) => {
 
     const resBans = await fetch("/backend/bans/recent");
     let recentBans: Array<PunishEntry>;

@@ -29,3 +29,18 @@ export interface PunishStats {
     week: number,
     day: number
 }
+
+export interface LoginResult {
+    id: number,
+    username: string,
+    uuid: string,
+    password: string,
+    admin: number
+}
+
+export interface AuthResult {
+    id: number,
+    username: string,
+    uuid: string,
+    admin: number
+}
