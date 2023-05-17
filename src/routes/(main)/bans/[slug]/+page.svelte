@@ -1,0 +1,12 @@
+<script lang="ts">
+    import PunishView from "$lib/PunishView.svelte";
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
+</script>
+
+<svelte:head>
+	<title>Ban #{data.ban.id} | TrueOG</title>
+</svelte:head>
+
+<PunishView entry={data.ban} type="Ban" admin={data.sessionUser.admin} back="/"/>

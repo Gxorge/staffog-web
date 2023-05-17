@@ -32,11 +32,11 @@
         </div>
         <div class="column staffog-gib-padding">
             <h1 class="title has-text-centered">Recent Bans</h1>
-            <PunishTable entryList={data.recentBans}/>
+            <PunishTable entryList={data.recentBans} punishType="bans"/>
         </div>
         <div class="column staffog-gib-padding">
             <h1 class="title has-text-centered">Recent Mutes</h1>
-            <PunishTable entryList={data.recentMutes}/>
+            <PunishTable entryList={data.recentMutes} punishType="mutes"/>
         </div>
     </div>
 </container>

@@ -1,4 +1,5 @@
-import { getTopTen, apiCanAccess } from '$lib/server/global';
+import { apiCanAccess } from '$lib/server/global';
+import { getTopTen } from '$lib/server/punish.js';
 
 export async function GET({ cookies }) {
     if (await apiCanAccess(cookies.get('token')) == false) {

@@ -1,4 +1,5 @@
-import { getPunishStats, apiCanAccess } from '$lib/server/global';
+import { apiCanAccess } from '$lib/server/global';
+import { getPunishStats } from '$lib/server/punish.js';
 import type { PunishStats } from '$lib/types';
 
 export async function GET({ cookies }) {
