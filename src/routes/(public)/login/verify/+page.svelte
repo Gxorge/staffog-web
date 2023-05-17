@@ -1,15 +1,22 @@
 <script lang="ts">
-    import type { ActionData } from './$types';
+    import type { ActionData, PageData } from './$types';
     export let form: ActionData;
+    export let data: PageData;
 </script>   
 
 <svelte:head>
-	<title>Activate | TrueOG</title>
+	<title>Verfication | TrueOG</title>
 </svelte:head>
 
-<div class="content has-text-centered">To activate your account, please enter your IGN and the output of running <b>/stafflink</b> in-game.</div>
+<div class="content has-text-centered">To continue, please re-verify your account. Please enter the output of running <b>/stafflink</b> in-game.</div>
 <form method="post">
     <section class="section">
+
+        {#if data.paramInGame == "true"}
+            <div class="notification is-danger">New IP acknowledged. Your access in-game has been restored. To continue using the staff pannel, please re-verify by running <b>/stafflink</b> in-game.</div>
+        {:else if data.paramInGame == "false"}    
+            <div class="notification is-danger">New IP detected. To continue using the staff pannel, please re-verify by running <b>/stafflink</b> in-game.</div>
+        {/if}
 
         {#if form != null && !form.success}
             <div class="notification is-danger">{form?.message}</div>
@@ -33,26 +40,8 @@
             </label>
         </div>
 
-        <div class="field">
-            <label class="label">
-                Choose a password
-                <div class="control">
-                    <input name="pwd" class="input " type="password" placeholder="Choose a pasword">
-                    </div>
-            </label>
-        </div>
-
-        <div class="field">
-            <label class="label">
-                Repeat your password
-                <div class="control">
-                    <input name="pwdrepeat" class="input " type="password" placeholder="Repeat your password">
-                    </div>
-            </label>
-        </div>
-
         <div class="control">
-            <button class="button is-primary">Activate Account</button>
+            <button class="button is-primary">Verify</button>
         </div>
     </section>
 </form>

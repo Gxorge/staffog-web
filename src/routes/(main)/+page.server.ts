@@ -9,6 +9,10 @@ export const load = (async ({ locals }) => {
         throw redirect(303, '/login');
     }
 
+    if (sessionUser.ip != locals.userIp) {
+        throw redirect(303, '/login/out/silent');
+    }
+
     return {
         sessionUser
     };

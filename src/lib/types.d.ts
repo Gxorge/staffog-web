@@ -42,5 +42,16 @@ export interface AuthResult {
     id: number,
     username: string,
     uuid: string,
-    admin: number
+    admin: number,
+    ip: string
+}
+
+export interface StaffIPInfo {
+    id: number,
+    uuid: string,
+    ip: string,
+    initial: boolean,
+    panel_acknowledged: boolean,
+    panel_verified: boolean,
+    game_verified: boolean
 }

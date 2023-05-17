@@ -17,12 +17,13 @@ export function checkInput(input: String): boolean {
     return Boolean(input.match(inputAllowed));
 }
 
-export function createJWT(info: LoginResult): string {
+export function createJWT(info: LoginResult, userIp: string): string {
     const jwtData = {
         id: info.id,
         uuid: info.uuid,
         username: info.username,
-        admin: info.admin
+        admin: info.admin,
+        ip: userIp
     };
 
     if (!tokenSecret) {

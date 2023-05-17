@@ -3,7 +3,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { dbPool, getUUIDFromName, checkInput } from '$lib/server/global';
 import { isIpRecognised, updateIpEntry } from '$lib/server/ipchecks';
 import { scryptSync, randomBytes } from 'crypto';
-import type { AuthResult } from '$lib/types';
+import type { AuthResult, StaffIPInfo } from '$lib/types';
 import type { PageServerLoad } from '../$types';
 
 export const load = (async ({ locals }) => {
@@ -24,20 +24,12 @@ export const actions = {
         const formData = Object.fromEntries(await event.request.formData());
 
         // Form validation
-        if (!formData.username || !formData.actcode || !formData.pwd || !formData.pwdrepeat) {
+        if (!formData.username || !formData.actcode) {
             return fail(400, { success: false, message: "Form is in-complete."});
         }
 
         if (!checkInput(formData.username.toString()) || !checkInput(formData.actcode.toString())) {
             return fail(400, { success: false, message: "Your input contains disallowed characters. Please try again."});
-        }
-
-        if (formData.pwd != formData.pwdrepeat) {
-            return fail(400, { success: false, message: "Your passwords do not match."});
-        }
-
-        if (await doesUsernameExist(formData.username.toString())) {
-            return fail(400, { success: false, message: "IGN has already been activated."})
         }
 
         let uuid = await getUUIDFromName(formData.username.toString());
@@ -52,68 +44,29 @@ export const actions = {
 
         let ipInfo = await isIpRecognised(uuid, event.getClientAddress());
         if (!ipInfo) {
-            return fail(400, { success:false, message: "Security check failed (code 1). Please contact an administrator."})
+            return fail(400, { success: false, message: "Security check failed (code 1). Please contact an administrator."})
         }
 
-        if (!ipInfo.initial) {
-            return fail(400, { success:false, message: "Security check failed (code 2). Please contact an administrator."})
+        if (!ipInfo.panel_acknowledged) {
+            return fail(400, { success: false, message: "Security check failed (code 2). Please contact an administrator."})
         }
 
-        // Let's create the user!
-        const salt = randomBytes(16).toString('hex');
-        let hashedPassword = scryptSync(formData.pwd.toString(), salt, 64).toString('hex');
+        if (!ipInfo.game_verified) {
+            return fail(400, { success: false, message: "Security check failed (code 3). Please contact an administrator."})
+        }
 
-        let createSuccess = await createUser(formData.username.toString(), uuid, hashedPassword, salt, actAdmin);
-        if (!createSuccess) {
-            return fail(400, { success: false, message: "Failed to activate your account. Please contact an administrator."})
+        if (ipInfo.panel_verified) {
+            return fail(400, { success: false, message: "Your IP does not need to be re-verified."})
         }
 
         await removeActCode(uuid);
-        ipInfo.panel_acknowledged = true;
+
         ipInfo.panel_verified = true;
         await updateIpEntry(ipInfo);
 
         throw redirect(303, "/login?success=true");
     }
 } satisfies Actions;
-
-async function createUser(username: string, uuid: string, password: string, salt: string, admin: number): Promise<boolean> {
-    let conn;
-
-    try {
-        conn = await dbPool.getConnection();
-
-        await conn.query("INSERT INTO `staffog_web` (username, uuid, password, admin) VALUES (?,?,?,?);", [username, uuid, salt + ":" + password, admin]);
-
-        return true;
-    } catch (e) {
-        console.log(e);
-        return false;
-    } finally {
-        if (conn) conn.release();
-    }
-}
-
-async function doesUsernameExist(username: string): Promise<boolean> {
-    let conn;
-
-    try {
-        conn = await dbPool.getConnection();
-
-        let result = await conn.query("SELECT `id` FROM `staffog_web` WHERE `username`=?", [username]);
-        let list = (result as Array<any>);
-
-        if (list.length == 0) return false;
-
-    } catch (e) {
-        console.log(e);
-        return true;
-    } finally {
-        if (conn) conn.release();
-    }
-
-    return true;
-}
 
 async function checkActCode(uuid: string, code: string): Promise<number | null> {
     let conn;

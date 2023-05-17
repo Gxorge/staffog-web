@@ -13,7 +13,7 @@
     <section class="section">
 
         {#if data.paramSuccess != null && data.paramSuccess == "true"}
-            <div class="notification is-success">Activation successfully. Please sign-in below.</div>
+            <div class="notification is-success">Activation successful. Please sign-in below.</div>
         {:else if data.paramSuccess != null && data.paramSuccess == "false"}
             <div class="notification is-danger">You must login to view that page.</div>
             {:else if data.paramSuccess != null && data.paramSuccess == "out"}

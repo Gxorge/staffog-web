@@ -1,8 +1,9 @@
 import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { dbPool, checkInput, createJWT } from '$lib/server/global';
+import { isIpRecognised, hasUUIDGotIp, createIpEntry, updateIpEntry } from '$lib/server/ipchecks';
 import { scryptSync, timingSafeEqual } from 'crypto';
-import type { AuthResult, LoginResult } from '$lib/types';
+import type { AuthResult, LoginResult, StaffIPInfo } from '$lib/types';
 
 export const load = (async ({ locals }) => {
     const sessionUser: AuthResult = locals.user;
@@ -46,9 +47,29 @@ export const actions = {
             return fail(400, { success: false, message: "Invalid username or password."});
         }
 
-        let token = createJWT(userInfo);
+        // Check for IP
+        let hasIp = await hasUUIDGotIp(userInfo.uuid);
+        if (!hasIp) {
+            return fail(400, { success:false, message: "Security check failed. Please contact an administrator."})
+        }
+
+        let ipInfo = await isIpRecognised(userInfo.uuid, event.getClientAddress());
+        if (!ipInfo) {
+            let newInfo: StaffIPInfo = { id: -1, uuid: userInfo.uuid, ip: event.getClientAddress(), initial: false, panel_acknowledged: true, panel_verified: false, game_verified: false };
+            await createIpEntry(newInfo);
+
+            throw redirect(303, "/login/verify?ingame=false");
+        }
+
+        if (!ipInfo.panel_verified) {
+            ipInfo.panel_acknowledged = true;
+            await updateIpEntry(ipInfo);
+            throw redirect(303, "/login/verify?ingame=true");
+        }
+
+        let token = createJWT(userInfo, ipInfo.ip);
         if (token == "null") {
-            return fail(400, { success: false, message: "Sign-in failed. Please contact your administrator."});
+            return fail(400, { success: false, message: "Sign-in failed. Please contact an administrator."});
         }
 
         event.cookies.set('token', token, {

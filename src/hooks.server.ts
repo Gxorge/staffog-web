@@ -13,6 +13,7 @@ export const handle = (async ({ event, resolve }) => {
             const sessionUser = userInfo;
 
             event.locals.user = sessionUser;
+            event.locals.userIp = event.getClientAddress();
 
         } catch (e) {
             console.log(e);
