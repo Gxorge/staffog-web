@@ -135,3 +135,18 @@ export async function getOnlineStats(): Promise<OnlineStats | null> {
 
     return stats;
 }
+
+export async function queueTask(task: string, data: string): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        await conn.query("INSERT INTO `staffog_task` (`task`, `data`) VALUES (?,?)", [task, data]);
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+}

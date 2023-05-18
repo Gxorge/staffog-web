@@ -2,6 +2,7 @@
     import type { PunishEntry } from "./types";
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
 
+    export let paramResult: string | null;
     export let entry: PunishEntry;
     export let type: string;
     export let admin: boolean;
@@ -22,6 +23,13 @@
             <br>
             <br>
         {/if}
+
+        {#if paramResult != null && paramResult == "revoke"}
+            <div class="notification is-success">{type} revoke queued. Please allow up to 1 minute for the changes to take effect.</div>
+        {:else if paramResult != null && paramResult == "edit"} 
+            <div class="notification is-success">{type} edit queued. Please allow up to 1 minute for the changes to take effect.</div>
+        {/if}
+
         <table class="table is-centered is-bordered is-striped">
             <tbody>
                 <tr>
@@ -74,9 +82,9 @@
         <div class="buttons is-right">
             <button class="button" on:click={() => redirect(back)}>Back</button>
             {#if entry.active}
-                <button class="button is-link" on:click={() => redirect(window.location.href + "/edit")}>Edit {type}</button> 
+                <button class="button is-link" on:click={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/edit")}>Edit {type}</button> 
                 {#if admin}
-                    <button class="button is-danger" on:click={() => redirect(window.location.href + "/revoke")}>Revoke {type}</button>
+                    <button class="button is-danger" on:click={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/revoke")}>Revoke {type}</button>
                 {/if}
             {/if}
         </div>

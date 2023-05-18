@@ -9,4 +9,4 @@
 	<title>Ban #{data.ban.id} | TrueOG</title>
 </svelte:head>
 
-<PunishView entry={data.ban} type="Ban" admin={data.sessionUser.admin} back="/"/>
+<PunishView paramResult={data.paramResult} entry={data.ban} type="Ban" admin={data.sessionUser.admin} back="/"/>

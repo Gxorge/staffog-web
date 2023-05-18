@@ -9,4 +9,4 @@
 	<title>Mute #{data.mute.id} | TrueOG</title>
 </svelte:head>
 
-<PunishView entry={data.mute} type="Mute" admin={data.sessionUser.admin} back="/"/>
+<PunishView paramResult={data.paramResult} entry={data.mute} type="Mute" admin={data.sessionUser.admin} back="/"/>

@@ -1,9 +1,8 @@
 import { error } from '@sveltejs/kit';
-import type { PunishEntry, } from '$lib/types';
+import type { PageLoad } from './$types';
+import type {PunishEntry} from '$lib/types';
 
-export const load = async ({ params, fetch, url }) => {
-
-    let paramResult = url.searchParams.get('result');
+export const load = async ({ params, fetch, }) => {
 
     const resMute = await fetch("/backend/mutes/" + params.slug);
     let mute: PunishEntry;
@@ -15,6 +14,6 @@ export const load = async ({ params, fetch, url }) => {
     }
 
     return {
-        mute, paramResult
+        mute
     };
 }

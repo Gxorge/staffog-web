@@ -55,3 +55,12 @@ export interface StaffIPInfo {
     panel_verified: boolean,
     game_verified: boolean
 }
+
+export interface RevokePunishmentTask {
+    type: string,
+    id: number,
+    removedUuid: string,
+    removedName: string,
+    removedReason: string,
+    removedTime: number
+}
