@@ -1,5 +1,5 @@
 import { apiCanAccess } from '$lib/server/global';
-import { getAllPunishments } from '$lib/server/punish.js';
+import { getAllPunishmentsBy } from '$lib/server/punish.js';
 import type { PlayerPunishments } from '$lib/types';
 
 export async function GET({ cookies, params }) {
@@ -7,8 +7,8 @@ export async function GET({ cookies, params }) {
         return new Response("Unauthorized.", { status: 401 });
     }
 
-    let bans = await getAllPunishments("staffog_ban", params.slug);
-    let mutes = await getAllPunishments("staffog_mute", params.slug);
+    let bans = await getAllPunishmentsBy("staffog_ban", params.slug);
+    let mutes = await getAllPunishmentsBy("staffog_mute", params.slug);
     if (!bans || !mutes) {
         return new Response("Server error", { status: 500 });
     }

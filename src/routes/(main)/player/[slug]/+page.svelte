@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { is_empty } from 'svelte/internal';
-import type { PageData } from './$types';
+    import type { PageData } from './$types';
     import PunishTable from '$lib/PunishTable.svelte';
 
     export let data: PageData;
