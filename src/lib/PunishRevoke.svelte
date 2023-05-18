@@ -24,7 +24,7 @@
 
             <a class="button" href={"/" + type.toLowerCase() + "s/" + entry.id}>Back</a>
         </div>
-    {:else if BigInt(currentTime) >= entry.until}
+    {:else if entry.until != BigInt(-1) && BigInt(currentTime) >= entry.until}
         <div class="content has-text-centered">
             <h1>Revoke {type} #{entry.id}</h1>
             <h3>{type} on {entry.name} by {entry.by_name} for {getReadableMillis(entry.until, entry.time)}</h3>
