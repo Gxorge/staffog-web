@@ -78,7 +78,7 @@ export async function getPunishment(table: string, id: number): Promise<PunishEn
     try {
         conn = await dbPool.getConnection();
 
-        const result = await conn.query("SELECT * FROM " + table + " WHERE `id`=?", id);
+        const result = await conn.query("SELECT * FROM " + table + " WHERE `id`=?;", id);
         entry = result[0] as PunishEntry
 
         if (!entry) return null;
@@ -94,4 +94,40 @@ export async function getPunishment(table: string, id: number): Promise<PunishEn
     }
 
     return entry;
+}
+
+export async function getAllPunishments(table: string, uuid: string, name: string | null): Promise<Array<PunishEntry> | null> {
+    let conn;
+    let list: Array<PunishEntry>;
+
+    try {
+        conn = await dbPool.getConnection();
+
+        const result = await conn.query("SELECT * FROM " + table + " WHERE `uuid`=? ORDER BY `id` DESC;", uuid);
+        list = (result as Array<PunishEntry>);
+
+        if (!list) return null;
+
+
+        for (const entry of list) {
+            if (name == null) {
+                let gotName = await getNameFromUUID(entry.uuid);
+                if (!gotName) {
+                    entry.name = "Error";
+                    continue;
+                }
+                entry.name = gotName;   
+            } else {
+                entry.name = name;
+            }
+        }
+
+    } catch (e) {
+        console.log(e);
+        return null;
+    } finally {
+        if (conn) conn.release();
+    }
+
+    return list;
 }

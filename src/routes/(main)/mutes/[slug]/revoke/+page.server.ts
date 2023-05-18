@@ -46,7 +46,7 @@ export const actions = {
         let data: RevokePunishmentTask = {
             type: "MUTE",
             id: id,
-            removedName: user.username,
+            removedName: user.username + "*",
             removedUuid: user.uuid,
             removedReason: formData.reason.toString(),
             removedTime: new Date().getTime(),

@@ -4,6 +4,37 @@
     import type { PageData } from './$types';
 
     export let data: PageData;
+
+    let searchError = "";
+    let searchInput = "";
+
+
+    function redirect(loc: string) {
+        window.location.href = loc;
+    }
+
+    async function search() {
+        if (searchInput == "") {
+            searchError = "Please enter a player name or UUID."
+            return;
+        }
+
+        // Probably a uuid
+        if (searchInput.includes('-')) {
+            redirect('/player/' + searchInput);
+
+        // Probably a name    
+        } else {
+            let uuidRes = await fetch('/backend/player/uuid/' + searchInput);
+            if (uuidRes.status != 200) {
+                searchError = "Player does not exist.";
+                return;
+            }
+
+            let uuid = await uuidRes.text();
+            redirect('/player/' + uuid);
+        }
+    }
 </script>
 
 <svelte:head>
@@ -20,12 +51,15 @@
         <div class="column is-full">
             <section class="section content">
                 <h5>Player Lookup</h5>
+                {#if searchError != ""}
+                    <div class="notification is-danger">{searchError}</div>
+                {/if}
                 <div class="field has-addons">
                     <div class="control is-expanded">
-                      <input class="input" type="text" placeholder="Enter a player name or UUID">
+                      <input bind:value={searchInput} class="input" type="text" placeholder="Enter a player name or UUID">
                     </div>
                     <div class="control">
-                        <button class="button is-link">Search</button>
+                        <button on:click={search} class="button is-link">Search</button>
                     </div>
                 </div>
             </section>

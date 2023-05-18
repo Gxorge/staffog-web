@@ -10,7 +10,7 @@ export const dbPool = mariadb.createPool({
     password: process.env.DB_PWD,
     database: process.env.DB_NAME
 });
-const inputAllowed = /^[a-zA-Z0-9]+$/;
+const inputAllowed = /^[a-zA-Z0-9_]+$/;
 const tokenSecret = process.env.TOKEN_SECRET;
 
 export function checkInput(input: String): boolean {

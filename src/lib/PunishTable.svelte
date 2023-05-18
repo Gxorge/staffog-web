@@ -39,6 +39,9 @@
             {/each}
         </tbody>
     </table>
+    {#if entryList.length == 0}
+        <div class="content has-text-centered">No {punishType} issued.</div>
+    {/if}
 </div>
 
 <style lang="scss">

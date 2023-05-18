@@ -17,17 +17,22 @@ export interface PunishEntry {
     active: number
 }
 
-export interface OnlineStats {
-    online: boolean,
-    players: number,
-    staff: number
-}
-
 export interface PunishStats {
     total: number,
     month: number,
     week: number,
     day: number
+}
+
+export interface PlayerPunishments {
+    bans: Array<PunishEntry>
+    mutes: Array<PunishEntry>
+}
+
+export interface OnlineStats {
+    online: boolean,
+    players: number,
+    staff: number
 }
 
 export interface LoginResult {
