@@ -87,7 +87,7 @@ export async function deactiveUser(uuid: string) {
 
     try {
         conn = await dbPool.getConnection();
-        await conn.query("UPDATE `staffog_web` SET `active`=0;");
+        await conn.query("UPDATE `staffog_web` SET `active`=0 WHERE `uuid`=?", [uuid]);
     } catch (e) {
         console.log(e);
     } finally {

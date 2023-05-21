@@ -8,14 +8,14 @@
 	<title>Verfication | TrueOG</title>
 </svelte:head>
 
-<div class="content has-text-centered">To continue, please re-verify your account. Please enter the output of running <b>/stafflink</b> in-game.</div>
+<div class="content has-text-centered">To continue, please re-verify your account. Please enter the output of running <b>/panellink</b> in-game.</div>
 <form method="post">
     <section class="section">
 
         {#if data.paramInGame == "true"}
-            <div class="notification is-danger">New IP acknowledged. Your access in-game has been restored. To continue using the staff pannel, please re-verify by running <b>/stafflink</b> in-game.</div>
+            <div class="notification is-danger">New IP acknowledged. Your access in-game has been restored. To continue using the staff pannel, please re-verify by running <b>/panellink</b> in-game.</div>
         {:else if data.paramInGame == "false"}    
-            <div class="notification is-danger">New IP detected. To continue using the staff pannel, please re-verify by running <b>/stafflink</b> in-game.</div>
+            <div class="notification is-danger">New IP detected. To continue using the staff pannel, please re-verify by running <b>/panellink</b> in-game.</div>
         {/if}
 
         {#if form != null && !form.success}
