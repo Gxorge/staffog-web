@@ -2,23 +2,24 @@ import { redirect, error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import type { AuthResult, RevokePunishmentTask } from '$lib/types';
 import { queueTask } from '$lib/server/global';
+import { onPageLoadSecurityCheck } from '$lib/server/user';
 
 let id: number;
 let user: AuthResult;
 
 export const load = (async ({ locals, params }) => {
     const sessionUser: AuthResult = locals.user;
-
-    if (!sessionUser) {
-        throw redirect(303, '/login');
-    }
-
-    if (sessionUser.ip != locals.userIp) {
-        throw redirect(303, '/login/out/silent');
+    let check = await onPageLoadSecurityCheck(sessionUser, locals.userIp);
+    if (!check.allow) {
+        if (check.logout) {
+            throw redirect(303, '/login/out/silent');
+        } else {
+            throw redirect(303, '/login');
+        }
     }
 
     if (!sessionUser.admin) {
-        throw error(403, "Unauthorized.");
+        throw error(403, "Unauthorized.")
     }
 
     id = Number(params.slug);

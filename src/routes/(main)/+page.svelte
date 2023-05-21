@@ -21,7 +21,12 @@
 
         // Probably a uuid
         if (searchInput.includes('-')) {
-            redirect('/player/' + searchInput);
+            let staffRes = await fetch('/backend/player/isstaff/' + searchInput);
+            let isStaff = await staffRes.text();
+            if (isStaff == "true")
+                redirect('/profile/' + searchInput);
+            else
+                redirect('/player/' + searchInput);
 
         // Probably a name    
         } else {
@@ -32,7 +37,13 @@
             }
 
             let uuid = await uuidRes.text();
-            redirect('/player/' + uuid);
+
+            let staffRes = await fetch('/backend/player/isstaff/' + uuid);
+            let isStaff = await staffRes.text();
+            if (isStaff == "true")
+                redirect('/profile/' + uuid);
+            else
+                redirect('/player/' + uuid);
         }
     }
 </script>

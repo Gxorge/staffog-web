@@ -4,6 +4,8 @@ import { dbPool, checkInput, createJWT } from '$lib/server/global';
 import { isIpRecognised, hasUUIDGotIp, createIpEntry, updateIpEntry } from '$lib/server/ipchecks';
 import { scryptSync, timingSafeEqual } from 'crypto';
 import type { AuthResult, LoginResult, StaffIPInfo } from '$lib/types';
+import { deactiveUser, getUserInfoByName } from '$lib/server/user';
+import { isActivelyPunished } from '$lib/server/punish';
 
 export const load = (async ({ locals }) => {
     const sessionUser: AuthResult = locals.user;
@@ -31,7 +33,7 @@ export const actions = {
             return fail(400, { success: false, message: "Your input contains disallowed characters. Please try again."});
         }
 
-        let userInfo = await getUserInfo(formData.username.toString());
+        let userInfo = await getUserInfoByName(formData.username.toString());
         if (!userInfo) {
             return fail(400, { success: false, message: "Invalid username or password."});
         }
@@ -47,10 +49,25 @@ export const actions = {
             return fail(400, { success: false, message: "Invalid username or password."});
         }
 
+        if (!userInfo.active) {
+            return fail(400, { success: false, message: "User is deactivated." });
+        }
+
+        let activePunishment = await isActivelyPunished(userInfo.uuid);
+        if (activePunishment == null) {
+            return fail(400, { success:false, message: "Security check failed (code 1). Please contact an administrator."})
+        }
+
+        if (activePunishment) {
+            await deactiveUser(userInfo.uuid);
+            return fail(400, { success: false, message: "User is deactivated." });
+        }
+
+
         // Check for IP
         let hasIp = await hasUUIDGotIp(userInfo.uuid);
         if (!hasIp) {
-            return fail(400, { success:false, message: "Security check failed. Please contact an administrator."})
+            return fail(400, { success:false, message: "Security check failed (code 2). Please contact an administrator."})
         }
 
         let ipInfo = await isIpRecognised(userInfo.uuid, event.getClientAddress());
@@ -83,25 +100,3 @@ export const actions = {
         throw redirect(303, "/");
     }
 } satisfies Actions;
-
-async function getUserInfo(username: string): Promise<LoginResult | null> {
-    let conn;
-    let info: LoginResult;
-
-    try {
-        conn = await dbPool.getConnection();
-
-        let result = await conn.query("SELECT * FROM `staffog_web` WHERE `username`=?", [username]);
-        info = (result[0] as LoginResult)
-
-        if (!info) return null;
-
-    } catch (e) {
-        console.log(e);
-        return null;
-    } finally {
-        if (conn) conn.release();
-    }
-
-    return info;
-}

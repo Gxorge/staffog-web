@@ -9,7 +9,7 @@
         <img class="is-centered" src="/true-og-logo-transparent-background.png" alt="TrueOG logo." />
         <ul class="menu-list">
             <li><a href="/">Home</a></li>
-            <li><a href="/profile">Profile</a></li>
+            <li><a href="/profile/{userInfo.uuid}">Profile</a></li>
             <li><a href="/stafflist">Staff List</a></li>
             <li><a href="/reports">Reports</a></li>
             {#if userInfo.admin}

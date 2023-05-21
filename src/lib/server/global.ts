@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 import * as mariadb from "mariadb"; 
 import * as jwt from "jsonwebtoken";
 import type { AuthResult, LoginResult, OnlineStats, PunishEntry, PunishStats } from "../types";
+import { onPageLoadSecurityCheck } from "./user";
 dotenv.config();
 
 export const dbPool = mariadb.createPool({
@@ -59,6 +60,11 @@ export async function apiCanAccess(token: string | undefined): Promise<boolean> 
 
     const userInfo = verifyJWT(token);
     if (!userInfo) {
+        return false;
+    }
+
+    let security = await onPageLoadSecurityCheck(userInfo, userInfo.ip);
+    if (!security.allow) {
         return false;
     }
 

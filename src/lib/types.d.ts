@@ -40,6 +40,7 @@ export interface LoginResult {
     username: string,
     uuid: string,
     password: string,
+    active: number,
     admin: number
 }
 
@@ -49,6 +50,11 @@ export interface AuthResult {
     uuid: string,
     admin: number,
     ip: string
+}
+
+export interface SecurityCheckResult {
+    allow: boolean,
+    logout: boolean
 }
 
 export interface StaffIPInfo {
