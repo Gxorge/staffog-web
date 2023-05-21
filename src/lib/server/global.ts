@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 import * as mariadb from "mariadb"; 
-import * as jwt from "jsonwebtoken";
+import jsonwebtoken from 'jsonwebtoken';
 import type { AuthResult, LoginResult, OnlineStats, PunishEntry, PunishStats } from "../types";
 import { onPageLoadSecurityCheck } from "./user";
 dotenv.config();
@@ -32,7 +32,7 @@ export function createJWT(info: LoginResult, userIp: string): string {
     }
 
 
-    const token = jwt.sign(jwtData, tokenSecret, {
+    const token = jsonwebtoken.sign(jwtData, tokenSecret, {
         expiresIn: '1d'
     });
 
@@ -45,7 +45,7 @@ export function verifyJWT(token: string): AuthResult | null {
     }
 
     try {
-        let decoded = jwt.verify(token, tokenSecret) as AuthResult;
+        let decoded = jsonwebtoken.verify(token, tokenSecret) as AuthResult;
         return decoded;
     } catch (e) {
         console.log(e);
