@@ -7,7 +7,7 @@
 	<title>Activate | TrueOG</title>
 </svelte:head>
 
-<div class="content has-text-centered">To activate your account, please enter your IGN and the output of running <b>/panellink</b> in-game.</div>
+<div class="content has-text-centered">To activate your account, please enter your IGN and the output of running <b>/linkpanel</b> in-game.</div>
 <form method="post">
     <section class="section">
 
