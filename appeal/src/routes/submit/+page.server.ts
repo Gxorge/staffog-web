@@ -27,7 +27,7 @@ export const actions = {
 
         punishments = await getActivePunishments(uuid);
         if (!punishments || punishments.length == 0) {
-            return fail(400, { stage: 1, success: false, message: "You do not have any active punishments." });
+            return fail(400, { stage: 1, success: false, message: "You do not have any active or appealable punishments." });
         }
 
         return { stage: 2, success: true, punishments: punishments }

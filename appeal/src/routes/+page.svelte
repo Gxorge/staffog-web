@@ -11,13 +11,13 @@
         <div class="column">
             <div class="content has-text-centered">
                 <p><b>Unfairly punished?</b></p>
-                <a class="button is-link" href="/">Submit an appeal</a>
+                <a class="button is-link" href="/submit">Submit an appeal</a>
             </div>
         </div>
         <div class="column">
             <div class="content has-text-centered">
                 <p><b>Need an update?</b></p>
-                <a class="button is-link" href="/">Check your appeal's status</a>
+                <a class="button is-link" href="/check">Check your appeal's status</a>
             </div>
         </div>
     </div>

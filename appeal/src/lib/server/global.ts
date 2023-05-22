@@ -1,5 +1,7 @@
+import type { AppealEntry } from "$lib/types";
 import * as dotenv from "dotenv";
 import * as mariadb from "mariadb"; 
+import { getPunishment } from "./punish";
 dotenv.config();
 
 export const dbPool = mariadb.createPool({
@@ -65,13 +67,60 @@ export async function submitAppeal(uuid: string, type: string, id: number, reaso
 
     try {
         conn = await dbPool.getConnection();
+        let currentTime = new Date().getTime();
 
-        const result = await conn.query("INSERT INTO `staffog_appeal` (`uuid`, `type`, `pid`, `reason`) VALUES (?,?,?,?)", [uuid, type, id, conn.escape(reason)]);
+        const result = await conn.query("INSERT INTO `staffog_appeal` (`uuid`, `time`, `type`, `pid`, `reason`) VALUES (?,?,?,?,?)", [uuid, currentTime, type, id, conn.escape(reason)]);
 
         console.log(result);
         return result.insertId;
     } catch (e) {
         console.log(e);
         return null;
+    }
+}
+
+export async function getAppeal(uuid: string, ref: number): Promise<AppealEntry | null> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+
+        const result = await conn.query("SELECT `id`, `uuid`, `type`, `pid`, `reason`, `open`, `verdict`, `comment` FROM `staffog_appeal` WHERE `uuid`=? AND `id`=?", [uuid, ref]);
+        let entry = (result[0] as AppealEntry);
+
+        if (!entry) return null;
+
+        let punishment = await getPunishment((entry.type == "Ban" ? "staffog_ban" : "staffog_mute"), entry.pid)
+        if (!punishment) return null;
+
+        entry.punishment = punishment;
+
+        return entry;
+    } catch (e) {
+        console.log(e);
+        return null;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function isAppealForPunishmentActive(type: string, id: number): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+
+        const result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `type`=? AND `pid`=? AND `open`=1;", [type, id]);
+        let list = (result as Array<any>);
+
+        if (!list) return true;
+
+        return list.length != 0;
+        
+    } catch (e) {
+        console.log(e);
+        return true;
+    } finally {
+        if (conn) conn.release();
     }
 }

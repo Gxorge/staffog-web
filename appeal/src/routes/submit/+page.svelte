@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { ActionData } from "./$types";
-    import type { PunishEntry } from "$lib/types";
 
     export let form: ActionData;
 </script>

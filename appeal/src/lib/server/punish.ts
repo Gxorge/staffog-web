@@ -1,5 +1,5 @@
-import type { PlayerPunishments, PunishEntry, PunishStats } from "$lib/types";
-import { dbPool, getNameFromUUID } from "./global";
+import type { PlayerPunishments, PunishEntry } from "$lib/types";
+import { dbPool, getNameFromUUID, isAppealForPunishmentActive } from "./global";
 
 export async function getPunishment(table: string, id: number): Promise<PunishEntry| null> {
     let conn;
@@ -69,20 +69,21 @@ export async function getActivePunishments(uuid: string): Promise<Array<PunishEn
 
     let active: Array<PunishEntry> = [];
 
-    let isPunished = false;
     for (let entry of all.bans) {
         if (entry.active) {
             entry.type = "Ban";
-            active.push(entry);
-            break;
+            if (await isAppealForPunishmentActive("Ban", Number(entry.id)) == false) {
+                active.push(entry);
+            }
         }
     }
 
     for (let entry of all.mutes) {
         if (entry.active) {
             entry.type = "Mute";
-            active.push(entry);
-            break;
+            if (await isAppealForPunishmentActive("Mute", Number(entry.id)) == false) {
+                active.push(entry);
+            }
         }
     }
 
