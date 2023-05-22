@@ -124,3 +124,21 @@ export async function isAppealForPunishmentActive(type: string, id: number): Pro
         if (conn) conn.release();
     }
 }
+
+export async function canPunishmentBeAppealed(type: string, id: number): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+
+        const countResult = await conn.query("SELECT COUNT(*) FROM `staffog_appeal` WHERE `type`=? AND `pid`=?;", [type, id]);
+        console.log(Number(countResult[0]["COUNT(*)"]) >= 2)
+        return Number(countResult[0]["COUNT(*)"]) < 2;
+        
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+}

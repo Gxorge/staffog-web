@@ -1,5 +1,5 @@
 import type { PlayerPunishments, PunishEntry } from "$lib/types";
-import { dbPool, getNameFromUUID, isAppealForPunishmentActive } from "./global";
+import { canPunishmentBeAppealed, dbPool, getNameFromUUID, isAppealForPunishmentActive } from "./global";
 
 export async function getPunishment(table: string, id: number): Promise<PunishEntry| null> {
     let conn;
@@ -72,7 +72,7 @@ export async function getActivePunishments(uuid: string): Promise<Array<PunishEn
     for (let entry of all.bans) {
         if (entry.active) {
             entry.type = "Ban";
-            if (await isAppealForPunishmentActive("Ban", Number(entry.id)) == false) {
+            if (await isAppealForPunishmentActive("Ban", Number(entry.id)) == false && await canPunishmentBeAppealed("Ban", Number(entry.id)) == true) {
                 active.push(entry);
             }
         }
@@ -81,7 +81,7 @@ export async function getActivePunishments(uuid: string): Promise<Array<PunishEn
     for (let entry of all.mutes) {
         if (entry.active) {
             entry.type = "Mute";
-            if (await isAppealForPunishmentActive("Mute", Number(entry.id)) == false) {
+            if (await isAppealForPunishmentActive("Mute", Number(entry.id)) == false && await canPunishmentBeAppealed("Mute", Number(entry.id)) == true) {
                 active.push(entry);
             }
         }
