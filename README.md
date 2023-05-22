@@ -1,7 +1,12 @@
 # Staff-OG Web
-Web staff panel that links with the [Staff-OG](https://github.com/Gxorge/Staff-OG) plugin.
+This contains the following websites:
+- Staff panel
+- Public Appeals
+- Public Reports (soon)
+These all link up to the [Staff-OG](https://github.com/Gxorge/Staff-OG) plugin.
 
 ## Setup
+- Enter the directory of the website you want to setup.
 - Install node dependencies by running `npm install`.
 - Build the project via `npm run build`.
 - Copy `package.json`, `package-lock.json` and `.example.env` to `build`.
