@@ -59,7 +59,7 @@ export const actions = {
         }
 
         if (activePunishment) {
-            await deactiveUser(userInfo.uuid);
+            await deactiveUser(userInfo.uuid, "System", "Failed security check: is punished.");
             return fail(400, { success: false, message: "User is deactivated." });
         }
 

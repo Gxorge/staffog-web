@@ -56,7 +56,11 @@
     <div class="columns is-multiline">
         <div class="column is-full content has-text-centered">
             <h1>TrueOG Staff Pannel</h1>
-            <br><br>
+            {#if !data.onlineStats.online}
+                <div class="notification is-danger">The server is offline. Some functionality may be limited.</div>
+            {:else}
+                <br><br>
+            {/if}
             <StatsLevel onlineStats={data.onlineStats} punishStats={data.punishStats}/>
         </div>
         <div class="column is-full">

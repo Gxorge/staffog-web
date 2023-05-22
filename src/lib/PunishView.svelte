@@ -27,7 +27,7 @@
         {#if paramResult != null && paramResult == "revoke"}
             <div class="notification is-success">{type} revoke queued. Please allow up to 1 minute for the changes to take effect.</div>
         {:else if paramResult != null && paramResult == "edit"} 
-            <div class="notification is-success">{type} edit queued. Please allow up to 1 minute for the changes to take effect.</div>
+            <div class="notification is-success">{type} has been updated.</div>
         {/if}
 
         <table class="table is-centered is-bordered is-striped">

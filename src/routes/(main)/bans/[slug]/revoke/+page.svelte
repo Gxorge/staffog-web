@@ -10,4 +10,4 @@
 	<title>Revoke Ban #{data.ban.id} | TrueOG</title>
 </svelte:head>
 
-<PunishRevoke form={form} entry={data.ban} type="Ban"/>
+<PunishRevoke form={form} entry={data.ban} type="Ban" serverOnline={data.online.online}/>

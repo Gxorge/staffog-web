@@ -75,3 +75,17 @@ export interface RevokePunishmentTask {
     removedReason: string,
     removedTime: number
 }
+
+export interface AuditPunishEditReason { // "punish_edit"
+    type: string,
+    id: number,
+    user: string,
+    oldReason: string,
+    newReason: string
+}
+
+export interface AuditUserDeactivated { // "user_deactivated"
+    user: string,
+    by: string,
+    reason: string
+}

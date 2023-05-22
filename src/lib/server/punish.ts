@@ -186,3 +186,18 @@ export async function isActivelyPunished(uuid: string): Promise<boolean | null> 
 
     return isPunished;
 }
+
+export async function editPunishmentReason(table: string, id: number, reason: string): Promise<boolean> {
+    let conn;
+    try {
+        conn = await dbPool.getConnection();
+        await dbPool.query("UPDATE `" + table + "` SET `reason`=? WHERE `id`=?;", [reason, id]);
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+
+    return true;
+}

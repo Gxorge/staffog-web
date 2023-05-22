@@ -1,4 +1,5 @@
-import type { AuthResult, LoginResult, SecurityCheckResult } from "$lib/types";
+import type { AuditUserDeactivated, AuthResult, LoginResult, SecurityCheckResult } from "$lib/types";
+import { addToAuditLog } from "./audit";
 import { dbPool } from "./global";
 import { isActivelyPunished } from "./punish";
 
@@ -22,7 +23,7 @@ export async function onPageLoadSecurityCheck(user: AuthResult, ip: string): Pro
     }
 
     if (isPunished) {
-        await deactiveUser(user.uuid);
+        await deactiveUser(user.uuid, "System", "Failed security check: is punished.");
         return { allow: false, logout: true }; 
     }
 
@@ -82,12 +83,20 @@ export async function isUserActive(uuid: string): Promise<boolean> {
     return info.active == 1;
 }
 
-export async function deactiveUser(uuid: string) {
+export async function deactiveUser(uuid: string, by: string, reason: string) {
     let conn;
 
     try {
         conn = await dbPool.getConnection();
         await conn.query("UPDATE `staffog_web` SET `active`=0 WHERE `uuid`=?", [uuid]);
+
+        let auditEntry: AuditUserDeactivated = {
+            user: uuid,
+            by: by,
+            reason: reason
+        }
+
+        await addToAuditLog("user_deactivated", JSON.stringify(auditEntry));
     } catch (e) {
         console.log(e);
     } finally {

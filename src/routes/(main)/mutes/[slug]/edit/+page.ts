@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type {OnlineStats, PunishEntry} from '$lib/types';
+import type {PunishEntry} from '$lib/types';
 
 export const load = async ({ params, fetch, }) => {
 
@@ -12,16 +12,7 @@ export const load = async ({ params, fetch, }) => {
         throw error(404, "Punishment not found.")
     }
 
-    const resOnline = await fetch("/backend/public/onlinestats");
-    let online: OnlineStats;
-
-    if (resOnline.status == 200) {
-        online = await resOnline.json();
-    } else {
-        throw error(500, "Couldn't get server status.")
-    }
-
     return {
-        mute, online
+        mute
     };
 }

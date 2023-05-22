@@ -10,4 +10,4 @@
 	<title>Revoke Mute #{data.mute.id} | TrueOG</title>
 </svelte:head>
 
-<PunishRevoke form={form} entry={data.mute} type="Mute"/>
+<PunishRevoke form={form} entry={data.mute} type="Mute" serverOnline={data.online.online}/>
