@@ -76,6 +76,21 @@ export interface RevokePunishmentTask {
     removedTime: number
 }
 
+export interface AppealEntry {
+    id : number,
+    uuid: string,
+    name: string,
+    time: bigint,
+    type: string,
+    pid: number,
+    reason: string,
+    open: boolean,
+    assigned: uuid,
+    verdict: number,
+    verdict_time: bigint,
+    comment: string
+}
+
 export interface AuditPunishEditReason { // "punish_edit"
     type: string,
     id: number,

@@ -13,7 +13,7 @@
             <li><a href="/stafflist">Staff List</a></li>
             <li><a href="/reports">Reports</a></li>
             {#if userInfo.admin}
-                <li><a href="/admin/appeals">Appeals</a></li>
+                <li><a href="/appeals">Appeals</a></li>
             {/if}
             <li><a href="/">Staff Guide</a></li>
             <li><a href="https://true-og.net/staff-apps">Staff Apps</a></li>
