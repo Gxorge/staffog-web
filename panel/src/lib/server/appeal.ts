@@ -64,7 +64,7 @@ export async function getAppealsAssignedTo(uuid: string): Promise<Array<AppealEn
 
     try {
         conn = await dbPool.getConnection();
-        let result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `assigned`=?;", [uuid]);
+        let result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `assigned`=? AND `open`=1;", [uuid]);
         let toReturn = (result as Array<AppealEntry>);
 
         if (!toReturn) return null;
@@ -115,12 +115,31 @@ export async function getAppealFromId(id: number): Promise<AppealEntry | null> {
     }
 }
 
+export async function closeAppeal(id: number, verdict: number, comment: string): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+
+        let currentTime = new Date().getTime();
+
+        await conn.query("UPDATE `staffog_appeal` SET `open`=0, `verdict`=?, `verdict_time`=?, `comment`=? WHERE `id`=?", [verdict, currentTime, comment, id]);
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 export async function getClosedAppeals(): Promise<Array<AppealEntry> | null> {
     let conn;
 
     try {
         conn = await dbPool.getConnection();
-        let result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `open`=0;");
+        let result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `open`=0 ORDER BY `id` DESC LIMIT 10;;");
         let toReturn = (result as Array<AppealEntry>);
 
         if (!toReturn) return null;

@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import type { AuthResult, RevokePunishmentTask } from '$lib/types';
 import { queueTask } from '$lib/server/global';
 import { onPageLoadSecurityCheck } from '$lib/server/user';
+import { revokePunishment } from '$lib/server/punish';
 
 let id: number;
 let user: AuthResult;
@@ -43,21 +44,17 @@ export const actions = {
         if (!id || !user) {
             return fail(500, { success: false, message: "Server was missing data."});
         }
+
+        if (await revokePunishment("staffog_ban", id, user.uuid, user.username + " (via Panel)", formData.reason.toString()) == false) {
+            return fail(500, { sucess: false, message: "Server failed to revoke punishment."})
+        }
         
         let data: RevokePunishmentTask = {
             type: "BAN",
             id: id,
-            removedName: user.username + "*",
-            removedUuid: user.uuid,
-            removedReason: formData.reason.toString(),
-            removedTime: new Date().getTime(),
         };
 
-
-        if (await queueTask("unpunish", JSON.stringify(data)) == false) {
-            return fail(500, { sucess: false, message: "Server failed to queue unpunish task."})
-        }
-
+        await queueTask("unpunish", JSON.stringify(data));
         throw redirect(303, '/' + data.type.toLowerCase() + 's/' + id + '?result=revoke')
     }
 } satisfies Actions;

@@ -69,11 +69,7 @@ export interface StaffIPInfo {
 
 export interface RevokePunishmentTask {
     type: string,
-    id: number,
-    removedUuid: string,
-    removedName: string,
-    removedReason: string,
-    removedTime: number
+    id: number
 }
 
 export interface AppealEntry {

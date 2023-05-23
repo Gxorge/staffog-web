@@ -1,7 +1,9 @@
 import { error } from '@sveltejs/kit';
 import type {AppealEntry, PunishEntry} from '$lib/types';
 
-export const load = async ({ params, fetch }) => {
+export const load = async ({ url, params, fetch }) => {
+
+    let message = url.searchParams.get('message');
 
     const resAppeal = await fetch("/backend/appeals/" + params.slug);
     let appeal: AppealEntry;
@@ -22,6 +24,6 @@ export const load = async ({ params, fetch }) => {
     }
 
     return {
-        appeal, punishment
+        appeal, punishment, message
     };
 }

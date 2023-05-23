@@ -6,18 +6,27 @@
 </script>
 
 <nav class="level">
-    <div class="level-item has-text-centered">
-        <div>
-            <p class="heading">Players Online</p>
-            <p class="title">{onlineStats.players}</p>
+    {#if !onlineStats.online}
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Server Status</p>
+                <p class="title">OFFLINE</p>
+            </div>
         </div>
-    </div>
-    <div class="level-item has-text-centered">
-        <div>
-            <p class="heading">Staff Online</p>
-            <p class="title">{onlineStats.staff}</p>
+    {:else}
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Players Online</p>
+                <p class="title">{onlineStats.players}</p>
+            </div>
         </div>
-    </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Staff Online</p>
+                <p class="title">{onlineStats.staff}</p>
+            </div>
+        </div>
+    {/if}
     <div class="level-item has-text-centered">
         <div>
             <p class="heading">Total Punishmnets</p>

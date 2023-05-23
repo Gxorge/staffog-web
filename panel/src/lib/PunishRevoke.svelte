@@ -42,37 +42,29 @@
             <p><b>Expires In: </b>{getReadableMillis(entry.until, BigInt(currentTime))}</p>    
         </div>
 
-        {#if !serverOnline}
-            <div class="content has-text-centered">
-                <div class="notification is-danger">Punishments cannot be revoked right now, the server is offline.</div>
+        <section class="section">
+            <form method="post">
+                {#if form != null && !form.success}
+                    <div class="notification is-danger">{form?.message}</div>
+                {/if}
+            
 
-                <a class="button" href={"/" + type.toLowerCase() + "s/" + entry.id}>Back</a>
-            </div>
-        {:else}
-            <section class="section">
-                <form method="post">
-                    {#if form != null && !form.success}
-                        <div class="notification is-danger">{form?.message}</div>
-                    {/if}
-                
+                <div class="field">
+                    <label class="label">
+                        Please enter your reason for revoking {entry.name}'s {type.toLowerCase()}
+                        <br>
+                        <div class="control">
+                            <input name="reason" class="input " type="text" placeholder="Reason for revoking the {type.toLowerCase()}">
+                        </div>
+                    </label>
+                </div>
 
-                    <div class="field">
-                        <label class="label">
-                            Please enter your reason for revoking {entry.name}'s {type.toLowerCase()}
-                            <br>
-                            <div class="control">
-                                <input name="reason" class="input " type="text" placeholder="Reason for revoking the {type.toLowerCase()}">
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="buttons control">
-                        <button class="button is-danger">Revoke {type}</button>
-                        <a class="button" href={"/" + type.toLowerCase() + "s/" + entry.id}>Back</a>
-                    </div>
-                </form>  
-            </section>    
-        {/if}    
+                <div class="buttons control">
+                    <button class="button is-danger">Revoke {type}</button>
+                    <a class="button" href={"/" + type.toLowerCase() + "s/" + entry.id}>Back</a>
+                </div>
+            </form>  
+        </section>    
     {/if}  
 
 </section>

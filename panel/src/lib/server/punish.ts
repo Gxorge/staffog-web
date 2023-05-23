@@ -201,3 +201,21 @@ export async function editPunishmentReason(table: string, id: number, reason: st
 
     return true;
 }
+
+export async function revokePunishment(table: string, id: number, uuid: string, name: string, reason: string): Promise<boolean> {
+    let conn;
+    try {
+        conn = await dbPool.getConnection();
+
+        let currentTime = new Date().getTime();
+
+        await dbPool.query("UPDATE `" + table + "` SET `removed_uuid`=?, `removed_name`=?, `removed_reason`=?, `removed_time`=?, `active`=? WHERE `id`=?;", [uuid, name, reason, currentTime, 0, id]);
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+    return true;
+}
