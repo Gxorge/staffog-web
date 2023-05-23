@@ -86,6 +86,7 @@ export interface AppealEntry {
     reason: string,
     open: boolean,
     assigned: uuid,
+    assigned_name: string,
     verdict: number,
     verdict_time: bigint,
     comment: string

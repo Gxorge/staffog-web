@@ -17,6 +17,7 @@
                 <th>Player</th>
                 <th>Type</th>
                 <th>Status</th>
+                <th>Handler</th>
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
@@ -28,6 +29,11 @@
                     <td>{p.name}</td>
                     <td>{p.type}</td>
                     <td>{p.open ? "Open" : "Closed"}</td>
+                    {#if p.assigned == null}
+                        <td>-</td>
+                    {:else }
+                        <td>{p.assigned_name}</td>
+                    {/if}
                     <td>{getReadableDate(p.time)}</td>
                     <td>
                         <button class="button is-primary" on:click={() => redirect(p.id)}>Manage</button>

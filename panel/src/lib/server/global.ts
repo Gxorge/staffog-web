@@ -72,6 +72,24 @@ export async function apiCanAccess(token: string | undefined): Promise<boolean> 
     return true;
 }
 
+export async function apiCanAdminAccess(token: string | undefined): Promise<boolean> {
+    if (!token) {
+        return false;
+    }
+
+    const userInfo = verifyJWT(token);
+    if (!userInfo) {
+        return false;
+    }
+
+    let security = await onPageLoadSecurityCheck(userInfo, userInfo.ip);
+    if (!security.allow) {
+        return false;
+    }
+
+    return userInfo.admin == 1;
+}
+
 export async function getNameFromUUID(uuid: string): Promise<string | null> {
     let conn;
     let name: string;
