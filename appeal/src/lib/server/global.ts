@@ -70,8 +70,7 @@ export async function submitAppeal(uuid: string, type: string, id: number, reaso
         let currentTime = new Date().getTime();
 
         const result = await conn.query("INSERT INTO `staffog_appeal` (`uuid`, `time`, `type`, `pid`, `reason`) VALUES (?,?,?,?,?)", [uuid, currentTime, type, id, conn.escape(reason)]);
-
-        console.log(result);
+        
         return result.insertId;
     } catch (e) {
         console.log(e);
@@ -132,7 +131,6 @@ export async function canPunishmentBeAppealed(type: string, id: number): Promise
         conn = await dbPool.getConnection();
 
         const countResult = await conn.query("SELECT COUNT(*) FROM `staffog_appeal` WHERE `type`=? AND `pid`=?;", [type, id]);
-        console.log(Number(countResult[0]["COUNT(*)"]) >= 2)
         return Number(countResult[0]["COUNT(*)"]) < 2;
         
     } catch (e) {

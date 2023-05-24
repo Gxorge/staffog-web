@@ -2,11 +2,10 @@ import { redirect, error, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { AuthResult, RevokePunishmentTask } from '$lib/types';
 import { onPageLoadSecurityCheck } from '$lib/server/user';
-import { closeAppeal, getAppealFromId } from '$lib/server/appeal';
+import { claimAppeal, closeAppeal, getAppealFromId, isAppealClaimed, unclaimAppeal } from '$lib/server/appeal';
 import { getPunishment, revokePunishment } from '$lib/server/punish';
 import { queueTask } from '$lib/server/global';
 
-let appealId: number;
 export const load = (async ({ locals, params }) => {
     const sessionUser: AuthResult = locals.user;
     let check = await onPageLoadSecurityCheck(sessionUser, locals.userIp);
@@ -23,34 +22,51 @@ export const load = (async ({ locals, params }) => {
         throw error(403, "Unauthorized.")
     }
 
-    appealId = Number(params.slug);
-
     return {
         sessionUser
     };
 }) satisfies PageServerLoad;
 
 export const actions = {
+    back: async (event) => {
+        throw redirect(303, '/appeals/');
+    },
+
+    claim: async (event) => {
+        let appealId = Number(event.params.slug);
+
+        if (await isAppealClaimed(appealId) == true) {
+            return fail(400, { success: false, message: "Appeal is already claimed."})
+        }
+
+        if (await claimAppeal(appealId, event.locals.user.uuid) == false) {
+            return fail(500, { success: false, message: "Server failed to claim appeal."})
+        }
+
+        throw redirect(303, '/appeals/' + appealId + '?message=claimed');
+    },
+
     accept: async (event) => {
+        let appealId = Number(event.params.slug);
         const data = await event.request.formData();
         let comments = data.get('comments');
 
         if (!comments) {
-            return fail(400, { success: false, message: "Please enter a comment. "})
+            return fail(400, { success: false, closeMessage: "Please enter a comment. "})
         }
 
         let appeal = await getAppealFromId(appealId);
         if (!appeal) {
-            return fail(500, { success: false, message: "Server failed to get appeal data."})
+            return fail(500, { success: false, closeMessage: "Server failed to get appeal data."})
         }
 
         let punishment = await getPunishment((appeal.type == "Ban" ? "staffog_ban" : "staffog_mute"), appeal.pid);
         if (!punishment) {
-            return fail(500, { success: false, message: "Server failed to get punishment data."})
+            return fail(500, { success: false, closeMessage: "Server failed to get punishment data."})
         }
 
         if (await closeAppeal(appealId, 1, comments.toString()) == false) {
-            return fail(500, { success: false, message: "Server failed to close appeal."})
+            return fail(500, { success: false, closeMessage: "Server failed to close appeal."})
         }
 
         if (await revokePunishment((appeal.type == "Ban" ? "staffog_ban" : "staffog_mute"), appeal.pid, appeal.assigned, appeal.assigned_name + " (via Appeals)", comments.toString()) == false) {
@@ -67,15 +83,16 @@ export const actions = {
     },
 
     reject: async (event) => {
+        let appealId = Number(event.params.slug);
         const data = await event.request.formData();
         let comments = data.get('comments');
 
         if (!comments) {
-            return fail(400, { success: false, message: "Please enter a comment. "})
+            return fail(400, { success: false, closeMessage: "Please enter a comment. "})
         }
 
         if (await closeAppeal(appealId, 0, comments.toString()) == false) {
-            return fail(500, { success: false, message: "Server failed to close appeal."})
+            return fail(500, { success: false, closeMessage: "Server failed to close appeal."})
         }
 
         throw redirect(303, '/appeals/' + appealId + '?message=closed');

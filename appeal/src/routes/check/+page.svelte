@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { comment } from "svelte/internal";
-import type { ActionData } from "./$types";
+    import type { ActionData } from "./$types";
 
     export let form: ActionData;
 </script>
@@ -41,15 +40,37 @@ import type { ActionData } from "./$types";
             </div>
         {:else}
             <div class="content has-text-centered">
-                <h2>Appealing {form.appeal.type} for {form.appeal.punishment.reason}</h2>
-                <p>Appeal Status: <b>{form.appeal.open ? "Open" : "Closed"}</b></p>
-                {#if !form.appeal.open}
-                    <h3>Appeal Verdict: {form.appeal.verdict == 0 ? "REJECTED" : "ACCEPTED"}</h3>
-                    <p><b>Staff Comment: </b> {form.appeal.comment}</p>
-                {:else}
+                <h1>Appeal #{form.appeal.id} by {form.username}</h1>
+                <p>You are appealing your {form.appeal.type.toLowerCase()} for {form.appeal.punishment.reason}</p>
+
+                {#if form.appeal.open}
                     <br>
-                    <p>Your appeal is still awaiting a verdict. Please check back later.</p>    
+                    <p>Your appeal is still awaiting a verdict. Please check back later.</p> 
                 {/if}
+
+                <table class="table is-bordered is-striped ">
+                    <tbody>
+                        <tr>
+                            <th>Appeal Status</th>
+                            <td>{form.appeal.open ? "Open" : "Closed"}</td>
+                        </tr>
+                        {#if form.appeal.open}
+                            <tr>
+                                <th>Appeal Verdict</th>
+                                <td>Pending</td>
+                            </tr>
+                        {:else}
+                            <tr>
+                                <th>Appeal Verdict</th>
+                                <td>{form.appeal.verdict == 0 ? "Rejected" : "Accepted"}</td>
+                            </tr>
+                            <tr>
+                                <th>Staff Comment</th>
+                                <td>{form.appeal.comment}</td>
+                            </tr>
+                        {/if}
+                    </tbody>
+                </table>
             </div>
         {/if}    
     </section>

@@ -35,6 +35,6 @@ export const actions = {
             return fail(400, { success: false, message: "Could not find your appeal. Please check your username and reference number." });
         }
 
-        return { success: true, appeal: appeal }
+        return { success: true, appeal: appeal, username: username }
     }
 }

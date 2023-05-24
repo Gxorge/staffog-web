@@ -3,12 +3,13 @@ import { getActivePunishments } from '$lib/server/punish.js';
 import type { PunishEntry } from '$lib/types.js';
 import { fail, redirect } from '@sveltejs/kit';
 
-let punishments: Array<PunishEntry> | null;
-let selectedPunishment: PunishEntry | null;
 export const actions = {
     stage_one: async (event) => {
         const data = await event.request.formData();
         let username = data.get('username');
+
+        event.cookies.delete('punishments');
+        event.cookies.delete('selected');
 
         if (!username) {
             return fail(400, { stage: 1, success: false, message: "Please enter your username." });
@@ -25,10 +26,15 @@ export const actions = {
             return fail(400, { stage: 1, success: false, message: "Please check your username, have you ever joined the server?" });
         }
 
-        punishments = await getActivePunishments(uuid);
+        let punishments = await getActivePunishments(uuid);
         if (!punishments || punishments.length == 0) {
             return fail(400, { stage: 1, success: false, message: "You do not have any active or appealable punishments." });
         }
+
+        event.cookies.set('punishments', JSON.stringify(punishments, (key, value) => 
+        typeof value === 'bigint'
+            ? value.toString()
+            : value))
 
         return { stage: 2, success: true, punishments: punishments }
     },
@@ -36,19 +42,25 @@ export const actions = {
     stage_two: async (event) => {
         const data = await event.request.formData();
         let selectedForm = data.get('punishment');
-        
-        if (!selectedForm) {
-            return fail(400, { stage: 2, success: false, message: "Please select a punishment", punishments: punishments });
+        let punishmentsCookie = event.cookies.get('punishments');
+
+        if (!punishmentsCookie) {
+            return fail(500, { stage: 1, success: false, message: "Client failed (code 1), please try again." });
         }
 
-        if (!punishments) {
-            return fail(500, { stage: 1, success: false, message: "Server failed (code 1), please try again." });
+        let punishments = JSON.parse(punishmentsCookie) as Array<PunishEntry>;
+
+        console.log(selectedForm);
+        if (selectedForm == null) {
+            return fail(400, { stage: 2, success: false, message: "Please select a punishment.", punishments: punishments });
         }
 
         selectedForm = selectedForm.toString();
 
-        selectedPunishment = null;
+        let selectedPunishment = null;
+        console.log(punishments)
         for (let entry of punishments) {
+            console.log(entry);
             let generated = entry.type + " for " + entry.reason;
             if (generated == selectedForm) {
                 selectedPunishment = entry;
@@ -56,9 +68,15 @@ export const actions = {
             }
         }
 
+        console.log(selectedPunishment);
         if (!selectedPunishment) {
             return fail(400, { stage: 2, success: false, message: "Please select a punishment", punishments: punishments });
         }
+
+        event.cookies.set('selected', JSON.stringify(selectedPunishment, (key, value) => 
+        typeof value === 'bigint'
+            ? value.toString()
+            : value))
 
         return { stage: 3, success: true, punishment: selectedPunishment };
     },
@@ -66,19 +84,28 @@ export const actions = {
     stage_three: async (event) => {
         const data = await event.request.formData();
         let reason = data.get('reason');
+        let selectedCookie = event.cookies.get('selected');
+
+        if (!selectedCookie) {
+            return fail(500, { stage: 1, success: false, message: "Client failed (code 1), please try again." });
+        }
+
+        let selectedPunishment = JSON.parse(selectedCookie) as PunishEntry;
+        if (!selectedPunishment) {
+            return fail(500, { stage: 1, success: false, message: "Client failed (code 2), please try again." });
+        }
 
         if (!reason) {
             return fail(400, { stage: 3, success: false, message: "Please provide your reason.", punishment: selectedPunishment });
-        }
-
-        if (!selectedPunishment) {
-            return fail(400, { stage: 2, success: false, message: "No punishment selected.", punishments: punishments });
         }
 
         let code = await submitAppeal(selectedPunishment.uuid, selectedPunishment.type, Number(selectedPunishment.id), reason.toString());
         if (!code) {
             return fail(400, { stage: 3, success: false, message: "Failed to submit appeal, please try again later.", punishment: selectedPunishment });
         }
+
+        event.cookies.delete('punishments');
+        event.cookies.delete('selected');
 
         throw redirect(303, "/done?ref=" + code);
     },

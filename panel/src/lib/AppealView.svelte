@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { AppealEntry, PunishEntry } from "./types";
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
+    import { assign } from "svelte/internal";
 
     export let appealEntry: AppealEntry;
     export let punishEntry: PunishEntry;
@@ -10,9 +11,24 @@
     export let formData: FormData;
 
     let currentTime = new Date().getTime();
+    let unclaimText = "Unclaim"
 
     function redirect(loc: string) {
         window.location.href = loc;
+    }
+
+    async function unclaimAppeal() {
+        if (unclaimText == "Unclaim") {
+            unclaimText = "Are you sure?";
+        } else {
+            let unclaimRes = await fetch('/backend/appeals/' + appealEntry.id + '/unclaim');
+            if (unclaimRes.status != 200) {
+                formData.success = false;
+                formData.message = await unclaimRes.text();
+            } else {
+                redirect('/appeals/' + appealEntry.id + '?message=unclaimed')
+            }
+        }
     }
 </script>
 
@@ -29,6 +45,14 @@
             <div class="notification is-success">Appeal closed successfully.</div>
         {:else if message != null && message == "closedrevokefail"}
             <div class="notification is-warning">Appeal closed successfully, however the punishment could not be automatically revoked. Please do this manually.</div>
+        {:else if message != null && message == "claimed"}
+            <div class="notification is-success">You have claimed this appeal.</div>
+        {:else if message != null && message == "unclaimed"}
+            <div class="notification is-success">You have unclaimed this appeal.</div>
+        {/if}
+
+        {#if formData != null && !formData.success && formData.message != null}
+            <div class="notification is-danger">{formData.message}</div>
         {/if}
 
         <table class="table is-centered is-bordered is-striped">
@@ -89,8 +113,8 @@
 
         {#if appealEntry.assigned == myUUID && appealEntry.open}
             <br>
-            {#if formData != null && !formData.success}
-                <div class="notification is-danger">{formData.message}</div>
+            {#if formData != null && !formData.success && formData.closeMessage != null}
+                <div class="notification is-danger">{formData.closeMessage}</div>
             {/if}
             <form method="post">
                 <div class="field">
@@ -106,11 +130,20 @@
                     <button class="button is-danger" formaction="?/reject">Reject</button>
                 </div> 
             </form>
+            <br>
+            <div class="buttons is-right">
+                <button class="button" on:click={() => redirect(back)}>Back</button>
+                <button class="button is-warning" on:click={unclaimAppeal}>{unclaimText}</button>
+            </div>
         {:else}
             <div class="buttons is-right">
                 <button class="button" on:click={() => redirect(back)}>Back</button>
-                {#if appealEntry.assigned == null}
-                    <button class="button is-success">Claim</button>
+                {#if appealEntry.assigned == null && appealEntry.open}
+                    <form method="post">
+                        <button class="button is-success" formaction="?/claim">Claim</button>
+                    </form>
+                {:else if appealEntry.open}
+                    <button class="button is-warning" on:click={unclaimAppeal}>{unclaimText}</button>
                 {/if}
             </div>
         {/if}

@@ -30,6 +30,57 @@ export async function getUnassignedAppeals(): Promise<Array<AppealEntry> | null>
     }
 }
 
+export async function isAppealClaimed(id: number): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        let result = await conn.query("SELECT * FROM `staffog_appeal` WHERE `id`=? AND `assigned` IS NOT NULL;", [id]);
+        let toReturn = (result as Array<AppealEntry>);
+
+        if (!toReturn) return true;
+
+        return toReturn.length != 0;
+    } catch (e) {
+        console.log(e);
+        return true;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function claimAppeal(id: number, uuid: string) {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        await conn.query("UPDATE `staffog_appeal` SET `assigned`=? WHERE `id`=?", [uuid, id]);
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function unclaimAppeal(id: number) {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        await conn.query("UPDATE `staffog_appeal` SET `assigned`=NULL WHERE `id`=?", [id]);
+
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
 export async function getPendingAppeals(): Promise<Array<AppealEntry> | null> {
     let conn;
 

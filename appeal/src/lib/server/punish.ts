@@ -33,7 +33,7 @@ export async function getAllPunishments(table: string, uuid: string): Promise<Ar
     try {
         conn = await dbPool.getConnection();
 
-        const result = await conn.query("SELECT * FROM " + table + " WHERE `uuid`=? ORDER BY `id` DESC;", uuid);
+        const result = await conn.query("SELECT `id`, `uuid`, `reason`, `time`, `active` FROM " + table + " WHERE `uuid`=? ORDER BY `id` DESC;", uuid);
         list = (result as Array<PunishEntry>);
 
         if (!list) return null;
