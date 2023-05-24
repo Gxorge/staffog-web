@@ -49,8 +49,6 @@ export const actions = {
         }
 
         let punishments = JSON.parse(punishmentsCookie) as Array<PunishEntry>;
-
-        console.log(selectedForm);
         if (selectedForm == null) {
             return fail(400, { stage: 2, success: false, message: "Please select a punishment.", punishments: punishments });
         }
@@ -58,9 +56,7 @@ export const actions = {
         selectedForm = selectedForm.toString();
 
         let selectedPunishment = null;
-        console.log(punishments)
         for (let entry of punishments) {
-            console.log(entry);
             let generated = entry.type + " for " + entry.reason;
             if (generated == selectedForm) {
                 selectedPunishment = entry;
@@ -68,7 +64,6 @@ export const actions = {
             }
         }
 
-        console.log(selectedPunishment);
         if (!selectedPunishment) {
             return fail(400, { stage: 2, success: false, message: "Please select a punishment", punishments: punishments });
         }
