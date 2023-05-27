@@ -4,7 +4,8 @@ export async function addToAuditLog(type: string, data: string): Promise<boolean
     let conn;
     try {
         conn = await dbPool.getConnection();
-        await conn.query("INSERT INTO `staffog_audit` (`type`, `data`) VALUES (?,?)", [type, data]);
+        let time = new Date().getTime();
+        await conn.query("INSERT INTO `staffog_audit` (`type`, `data`, `time`) VALUES (?,?,?)", [type, data, time]);
 
     } catch(e) {
         console.log(e);
