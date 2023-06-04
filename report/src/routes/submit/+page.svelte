@@ -49,7 +49,7 @@
                         <select name="offence" bind:value={selectedOffence}>
                             <option disabled selected>Please select an offence</option>
                             <option value="CHAT">Mutable Offence (i.e. abuse in chat, such as death threats.)</option>
-                            <option value="BAN">Bannable Offence (i.e cheating, exploiting, etc.)</option>
+                            <option value="BAN">Banable Offence (i.e cheating, exploiting, etc.)</option>
                             <option value="JAIL">Jailable Offence (i.e duping, glitching, etc.)</option>
                         </select>
                     </div>
@@ -59,9 +59,10 @@
 
         {#if selectedOffence != null && selectedOffence == "CHAT" && inGameFailed == false}
             <div class="notification is-danger">
-                Mutable Offences required an in-game chat report ID so that messages can be properly verified. This means that reports for Muteable Offences can only be submitted in-game with the <b>/chatreport</b> command.
+                Mutable Offences require an in-game chat report ID so that messages can be properly verified. This means that reports for Muteable Offences can only be submitted in-game with the <b>/chatreport</b> command.
                 <br>
                 If the in-game command failed but still gave you a chat report ID, you can continue with the button below.
+                <br>
                 <br>
                 <span class="button" on:click={() => {inGameFailed = true;}}>Continue with Chat Report ID</span>
             </div>

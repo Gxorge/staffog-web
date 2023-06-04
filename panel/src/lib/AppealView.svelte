@@ -74,6 +74,10 @@
                     <td>{punishEntry.by_name}</td>
                 </tr>
                 <tr>
+                    <th>Punish Duration</th>
+                    <td>{getReadableMillis(punishEntry.until, punishEntry.time)}</td>
+                </tr>
+                <tr>
                     <th>Submission Date</th>
                     <td>{getReadableDate(appealEntry.time)}</td>
                 </tr>

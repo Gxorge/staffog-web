@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ReportEntry } from "./types";
-    import { getReadableDate } from './sharedfuncs';
+    import { convertReportType, createLinkFromEvidence, getReadableDate } from './sharedfuncs';
 
     export let reportEntry: ReportEntry;
     export let back: string;
@@ -64,12 +64,12 @@
                 </tr>
                 <tr>
                     <th>Report Type</th>
-                    <td>{reportEntry.type}</td>
+                    <td>{convertReportType(reportEntry.type)}</td>
                 </tr>
                 {#if reportEntry.type == "CHAT"}
                     <tr>
                         <th>Chat Report ID</th>
-                        <td><a href="/chatreport/{reportEntry.crid}?back=reports/{reportEntry.id}">{reportEntry.crid}</a></td>
+                        <td><a href="/chatreport/{reportEntry.crid}?back=reports/{reportEntry.id}">#{reportEntry.crid}</a></td>
                     </tr>
                 {/if}
                 <tr>
@@ -79,10 +79,26 @@
                 <tr>
                     <th>Reporter Comments</th>
                     <td>
-                        <div class="notification is-warning">WARNING: PLEASE EXERCISE CAUTION WHEN CLICKING ANY LINKS.</div>
+                        <div class="notification is-warning">WARNING: <b>DO NOT CLICK LINKS FROM THIS SECTION</b>.</div>
                         <br>
                         {reportEntry.reason}
                     </td>
+                </tr>
+                <tr>
+                    <th>Report Evidence</th>
+                    {#if reportEntry.evidence.length == 0}
+                        <td>None provided.</td>
+                    {:else}
+                        <td>
+                            <span class="tag is-danger">Please continue to exercise caution when clicking links.</span>
+                            <br>
+                            <br>
+                            {#each reportEntry.evidence as evi}
+                                <a href={createLinkFromEvidence(evi)}>{createLinkFromEvidence(evi)}</a>
+                                <br>
+                            {/each}
+                        </td>
+                    {/if}
                 </tr>
                 {#if reportEntry.assigned != null}
                     <tr>

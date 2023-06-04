@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { convertReportType, createLinkFromEvidence } from "$lib/sharedfuncs";
     import type { ActionData } from "./$types";
 
     export let form: ActionData;
@@ -41,7 +42,7 @@
         {:else}
             <div class="content has-text-centered">
                 <h1>Report #{form.report.id} against {form.report.name}</h1>
-                <p>You have submitted a {form.report.type} report against {form.report.name}</p>
+                <p>You have submitted a {convertReportType(form.report.type)} report against {form.report.name}</p>
 
                 {#if form.report.open}
                     <br>
@@ -57,6 +58,19 @@
                         <tr>
                             <th>Your Comments</th>
                             <td>{form.report.reason}</td>
+                        </tr>
+                        <tr>
+                            <th>Report Evidence</th>
+                            {#if form.report.evidence.length == 0}
+                                <td>None provided.</td>
+                            {:else}
+                                <td>
+                                    {#each form.report.evidence as evi}
+                                        <a href={createLinkFromEvidence(evi)}>{createLinkFromEvidence(evi)}</a>
+                                        <br>
+                                    {/each}
+                                </td>
+                            {/if}
                         </tr>
                         {#if form.report.crid != null}
                             <tr>

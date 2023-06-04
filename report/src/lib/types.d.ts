@@ -8,6 +8,7 @@ export interface ReportEntry {
     type: string,
     crid: number | null,
     reason: string,
+    evidence: Array<ReportEvidence>,
     open: number,
     assigned: string,
     assigned_name: string,

@@ -1,4 +1,4 @@
-import type { ChatReportEntry, ChatReportMessage, ReportEntry } from "$lib/types";
+import type { ChatReportEntry, ChatReportMessage, ReportEntry, ReportEvidence } from "$lib/types";
 import { dbPool, getNameFromUUID } from "./global";
 
 export async function getUnassignedReports(): Promise<Array<ReportEntry> | null> {
@@ -168,6 +168,8 @@ export async function getReportFromId(id: number): Promise<ReportEntry | null> {
             let assignedName = await getNameFromUUID(entry.assigned);
             if (assignedName) entry.assigned_name = assignedName;
         }
+
+        entry.evidence = JSON.parse(result[0].evidence) as Array<ReportEvidence>;
 
         return entry;
     } catch (e) {

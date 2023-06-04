@@ -98,12 +98,18 @@ export interface ReportEntry {
     type: string,
     crid: number | null,
     reason: string,
+    evidence: Array<ReportEvidence>,
     open: number,
     assigned: string,
     assigned_name: string,
     verdict: number,
     verdict_time: bigint,
     comment: string
+}
+
+export interface ReportEvidence {
+    type: String,
+    data: String
 }
 
 export interface ChatReportMessage {

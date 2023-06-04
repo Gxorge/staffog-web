@@ -22,6 +22,8 @@ export async function getReport(uuid: String, id: number): Promise<ReportEntry |
             if (assignedName) entry.assigned_name = assignedName;
         }
 
+        entry.evidence = JSON.parse(result[0].evidence) as Array<ReportEvidence>;
+
         return entry;
     } catch (e) {
         console.log(e);
