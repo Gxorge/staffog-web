@@ -34,3 +34,9 @@ export interface AppealEntry {
     comment: string,
     punishment: PunishEntry
 }
+
+export interface NewAppealTask {
+    id: number,
+    by: string,
+    type: string
+}

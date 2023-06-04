@@ -1,6 +1,6 @@
-import { checkInput, getUUIDFromName, submitAppeal } from '$lib/server/global.js';
+import { checkInput, getNameFromUUID, getUUIDFromName, queueTask, submitAppeal } from '$lib/server/global.js';
 import { getActivePunishments } from '$lib/server/punish.js';
-import type { PunishEntry } from '$lib/types.js';
+import type { NewAppealTask, PunishEntry } from '$lib/types.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -101,6 +101,13 @@ export const actions = {
 
         event.cookies.delete('punishments');
         event.cookies.delete('selected');
+
+        let taskDetails: NewAppealTask = {
+            id: Number(code),
+            by: selectedPunishment.name,
+            type: selectedPunishment.type
+        };
+        await queueTask("newappeal", JSON.stringify(taskDetails));
 
         throw redirect(303, "/done?ref=" + code);
     },

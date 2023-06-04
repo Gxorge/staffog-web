@@ -140,3 +140,18 @@ export async function canPunishmentBeAppealed(type: string, id: number): Promise
         if (conn) conn.release();
     }
 }
+
+export async function queueTask(task: string, data: string): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        await conn.query("INSERT INTO `staffog_task` (`task`, `data`) VALUES (?,?)", [task, data]);
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+}

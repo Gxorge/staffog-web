@@ -63,3 +63,18 @@ export async function getUUIDFromName(name: string): Promise<string | null> {
 
     return uuid;
 }
+
+export async function queueTask(task: string, data: string): Promise<boolean> {
+    let conn;
+
+    try {
+        conn = await dbPool.getConnection();
+        await conn.query("INSERT INTO `staffog_task` (`task`, `data`) VALUES (?,?)", [task, data]);
+
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+
+    return true;
+}

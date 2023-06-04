@@ -1,6 +1,7 @@
-import { checkInput, checkInputEvidence, getUUIDFromName } from '$lib/server/global.js';
+import { checkInput, checkInputEvidence, getUUIDFromName, queueTask } from '$lib/server/global.js';
 import { submitReport } from '$lib/server/report.js';
-import type { ReportEvidence } from '$lib/types.js';
+import { convertReportType } from '$lib/sharedfuncs.js';
+import type { NewReportTask, ReportEvidence } from '$lib/types.js';
 import { fail, redirect } from '@sveltejs/kit';
 
 export const actions = {
@@ -78,6 +79,14 @@ export const actions = {
         if (!code) {
             return fail(500, { success: false, message: "Server failed to submit report, please try again later." });
         }
+
+        let taskDetails: NewReportTask = {
+            id: Number(code),
+            by: username,
+            offender: offender,
+            type: convertReportType(offence)
+        };
+        await queueTask("newreport", JSON.stringify(taskDetails));
 
         throw redirect(303, "/done?ref=" + code);
     },

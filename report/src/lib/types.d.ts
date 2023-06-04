@@ -39,3 +39,10 @@ export interface ReportEvidence {
     type: String,
     data: String
 }
+
+export interface NewReportTask {
+    id: number,
+    offender: string,
+    by: string,
+    type: string
+}
