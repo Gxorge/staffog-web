@@ -8,7 +8,6 @@
     export let form: ActionData;
     export let entry: PunishEntry;
     export let type: string;
-    export let serverOnline: boolean;
 
     function redirect(loc: string) {
         window.location.href = loc;
