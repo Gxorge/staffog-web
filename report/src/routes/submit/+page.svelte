@@ -2,11 +2,15 @@
     import { enhance } from "$app/forms";
     import type { ActionData } from "./$types";
 
-    export let form: ActionData;
+    interface Props {
+        form: ActionData;
+    }
 
-    let selectedOffence: String;
-    let inGameFailed: boolean = false;
-    let evidenceUrls = 0;
+    let { form }: Props = $props();
+
+    let selectedOffence: String = $state();
+    let inGameFailed: boolean = $state(false);
+    let evidenceUrls = $state(0);
 </script>
 
 <svelte:head>
@@ -64,7 +68,7 @@
                 If the in-game command failed but still gave you a chat report ID, you can continue with the button below.
                 <br>
                 <br>
-                <span class="button" on:click={() => {inGameFailed = true;}}>Continue with Chat Report ID</span>
+                <span class="button" onclick={() => {inGameFailed = true;}}>Continue with Chat Report ID</span>
             </div>
         {/if}
 
@@ -83,7 +87,7 @@
             <label class="label">
                 Please explain their offence. Evidence can be submitted below using the approved channels.
                 <div class="control">
-                    <textarea name="reason" class="textarea" placeholder="Please explain the offence."/>
+                    <textarea name="reason" class="textarea" placeholder="Please explain the offence."></textarea>
                 </div>
             </label>
         </div>
@@ -113,7 +117,7 @@
         {/each}
         <input name="evlinkamt" type="text" value="{evidenceUrls}" hidden>
 
-        <span class="button is-link" on:click={() => {evidenceUrls++;}}>Add Evidence Link</span>
+        <span class="button is-link" onclick={() => {evidenceUrls++;}}>Add Evidence Link</span>
 
         <br>
         <br>
