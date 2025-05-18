@@ -1,5 +1,10 @@
 <script lang="ts">
     import "$lib/app.scss";
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 </script>
 
 <main>
@@ -7,7 +12,7 @@
         <div class="content has-text-centered">
             <img src="/logo-alternate-transparent.png" alt="TrueOG logo." />
         </div>
-        <slot/>
+        {@render children?.()}
     </container>    
 </main>
 

@@ -1,7 +1,11 @@
 <script lang="ts">
     import type { ActionData } from "./$types";
 
-    export let form: ActionData;
+    interface Props {
+        form: ActionData;
+    }
+
+    let { form }: Props = $props();
 </script>
 
 <svelte:head>
@@ -62,7 +66,7 @@
                 <label class="label">
                     Why do you think your punishment should be revoked?
                     <br>
-                    <textarea name="reason" class="textarea" placeholder="Please provide as much detail as possible."/>
+                    <textarea name="reason" class="textarea" placeholder="Please provide as much detail as possible."></textarea>
                 </label>
             </div>
 
