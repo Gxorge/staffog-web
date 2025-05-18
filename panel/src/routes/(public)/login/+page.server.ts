@@ -11,7 +11,7 @@ export const load = (async ({ locals }) => {
     const sessionUser: AuthResult = locals.user;
 
     if (sessionUser) {
-        throw redirect(303, '/');
+        redirect(303, '/');
     }
 
     return {
@@ -75,13 +75,13 @@ export const actions = {
             let newInfo: StaffIPInfo = { id: -1, uuid: userInfo.uuid, ip: event.getClientAddress(), initial: false, panel_acknowledged: true, panel_verified: false, game_verified: false };
             await createIpEntry(newInfo);
 
-            throw redirect(303, "/login/verify?ingame=false");
+            redirect(303, "/login/verify?ingame=false");
         }
 
         if (!ipInfo.panel_verified) {
             ipInfo.panel_acknowledged = true;
             await updateIpEntry(ipInfo);
-            throw redirect(303, "/login/verify?ingame=true");
+            redirect(303, "/login/verify?ingame=true");
         }
 
         let token = createJWT(userInfo, ipInfo.ip);
@@ -97,6 +97,6 @@ export const actions = {
             maxAge: 60 * 60 * 24
         });
 
-        throw redirect(303, "/");
+        redirect(303, "/");
     }
 } satisfies Actions;

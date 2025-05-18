@@ -13,14 +13,14 @@ export const load = (async ({ locals, params }) => {
     let check = await onPageLoadSecurityCheck(sessionUser, locals.userIp);
     if (!check.allow) {
         if (check.logout) {
-            throw redirect(303, '/login/out/silent');
+            redirect(303, '/login/out/silent');
         } else {
-            throw redirect(303, '/login');
+            redirect(303, '/login');
         }
     }
 
     if (!sessionUser.admin) {
-        throw error(403, "Unauthorized.")
+        error(403, "Unauthorized.");
     }
 
     id = Number(params.slug);
@@ -55,6 +55,6 @@ export const actions = {
         };
 
         await queueTask("unpunish", JSON.stringify(data));
-        throw redirect(303, '/' + data.type.toLowerCase() + 's/' + id + '?result=revoke')
+        redirect(303, '/' + data.type.toLowerCase() + 's/' + id + '?result=revoke');
     }
 } satisfies Actions;

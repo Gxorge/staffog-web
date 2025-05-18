@@ -10,7 +10,7 @@ export const load = async ({ fetch, parent }) => {
     if (resUnassigned.status == 200) {
         unassigned = await resUnassigned.json();
     } else {
-        throw error(500, "Server failed to get appeals.")
+        error(500, "Server failed to get appeals.");
     }
 
     const resMy = await fetch("/backend/appeals/by/" + sessionUser.uuid);
@@ -19,7 +19,7 @@ export const load = async ({ fetch, parent }) => {
     if (resMy.status == 200) {
         my = await resMy.json();
     } else {
-        throw error(500, "Server failed to get appeals.")
+        error(500, "Server failed to get appeals.");
     }
 
     const resPending = await fetch("/backend/appeals/pending");
@@ -28,7 +28,7 @@ export const load = async ({ fetch, parent }) => {
     if (resPending.status == 200) {
         pending = await resPending.json();
     } else {
-        throw error(500, "Server failed to get appeals.")
+        error(500, "Server failed to get appeals.");
     }
 
     const resClosed = await fetch("/backend/appeals/closed");
@@ -37,7 +37,7 @@ export const load = async ({ fetch, parent }) => {
     if (resClosed.status == 200) {
         closed = await resClosed.json();
     } else {
-        throw error(500, "Server failed to get appeals.")
+        error(500, "Server failed to get appeals.");
     }
 
     return {

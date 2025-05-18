@@ -7,7 +7,7 @@ export const load = async ({ fetch, params }) => {
 
     let nameRres = await fetch("/backend/player/name/" + staffUuid);
     if (nameRres.status != 200) {
-        throw error(nameRres.status, "Player is not found.");
+        error(nameRres.status, "Player is not found.");
     }
     let staffName = await nameRres.text();
     
@@ -15,7 +15,7 @@ export const load = async ({ fetch, params }) => {
     let punishments: PlayerPunishments;
 
     if (resPunishments.status != 200) {
-        throw error(resPunishments.status, "Failed to get punsihments.");
+        error(resPunishments.status, "Failed to get punsihments.");
     }
 
     punishments = await resPunishments.json();

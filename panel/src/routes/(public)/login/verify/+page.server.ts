@@ -10,7 +10,7 @@ export const load = (async ({ locals }) => {
     const sessionUser: AuthResult = locals.user;
 
     if (sessionUser) {
-        throw redirect(303, '/');
+        redirect(303, '/');
     }
 
     return {
@@ -64,7 +64,7 @@ export const actions = {
         ipInfo.panel_verified = true;
         await updateIpEntry(ipInfo);
 
-        throw redirect(303, "/login?success=true");
+        redirect(303, "/login?success=true");
     }
 } satisfies Actions;
 

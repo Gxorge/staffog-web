@@ -13,7 +13,7 @@ export const load = async ({ url, params, fetch }) => {
     if (resReport.status == 200) {
         report = await resReport.json();
     } else {
-        throw error(404, "Report not found.")
+        error(404, "Report not found.");
     }
 
     return {

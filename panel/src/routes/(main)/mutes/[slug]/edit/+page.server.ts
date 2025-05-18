@@ -13,14 +13,14 @@ export const load = (async ({ locals, params }) => {
     let check = await onPageLoadSecurityCheck(sessionUser, locals.userIp);
     if (!check.allow) {
         if (check.logout) {
-            throw redirect(303, '/login/out/silent');
+            redirect(303, '/login/out/silent');
         } else {
-            throw redirect(303, '/login');
+            redirect(303, '/login');
         }
     }
 
     if (!sessionUser.admin) {
-        throw error(403, "Unauthorized.")
+        error(403, "Unauthorized.");
     }
 
     id = Number(params.slug);
@@ -67,6 +67,6 @@ export const actions = {
 
         await addToAuditLog("punish_edit", JSON.stringify(auditEntry));
 
-        throw redirect(303, '/mutes/' + id + '?result=edit')
+        redirect(303, '/mutes/' + id + '?result=edit');
     }
 } satisfies Actions;

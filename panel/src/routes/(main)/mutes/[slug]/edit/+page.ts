@@ -9,7 +9,7 @@ export const load = async ({ params, fetch, }) => {
     if (resMute.status == 200) {
         mute = await resMute.json();
     } else {
-        throw error(404, "Punishment not found.")
+        error(404, "Punishment not found.");
     }
 
     return {

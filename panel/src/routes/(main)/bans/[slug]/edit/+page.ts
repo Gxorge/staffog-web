@@ -10,7 +10,7 @@ export const load = async ({ params, fetch, }) => {
     if (resBan.status == 200) {
         ban = await resBan.json();
     } else {
-        throw error(404, "Punishment not found.")
+        error(404, "Punishment not found.");
     }
 
     return {

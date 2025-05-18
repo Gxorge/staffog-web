@@ -5,7 +5,7 @@ export const load = async ({ params, fetch }) => {
 
     let nameRres = await fetch("/backend/player/name/" + params.slug);
     if (nameRres.status != 200) {
-        throw error(nameRres.status, "Player is not found.");
+        error(nameRres.status, "Player is not found.");
     }
     let name = await nameRres.text();
     

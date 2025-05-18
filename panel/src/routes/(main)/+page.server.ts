@@ -8,9 +8,9 @@ export const load = (async ({ locals }) => {
     let check = await onPageLoadSecurityCheck(sessionUser, locals.userIp);
     if (!check.allow) {
         if (check.logout) {
-            throw redirect(303, '/login/out/silent');
+            redirect(303, '/login/out/silent');
         } else {
-            throw redirect(303, '/login');
+            redirect(303, '/login');
         }
     }
 

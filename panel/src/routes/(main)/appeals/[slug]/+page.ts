@@ -11,7 +11,7 @@ export const load = async ({ url, params, fetch }) => {
     if (resAppeal.status == 200) {
         appeal = await resAppeal.json();
     } else {
-        throw error(404, "Appeal not found.")
+        error(404, "Appeal not found.");
     }
 
     const resPunishment = await fetch("/backend/" + appeal.type.toLowerCase() + "s/" + appeal.pid);
@@ -20,7 +20,7 @@ export const load = async ({ url, params, fetch }) => {
     if (resPunishment.status == 200) {
         punishment = await resPunishment.json();
     } else {
-        throw error(404, "Punishment not found.")
+        error(404, "Punishment not found.");
     }
 
     return {

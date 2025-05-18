@@ -12,14 +12,14 @@ export const load = (async ({ locals, params }) => {
 
     if (!check.allow) {
         if (check.logout) {
-            throw redirect(303, '/login/out/silent');
+            redirect(303, '/login/out/silent');
         } else {
-            throw redirect(303, '/login');
+            redirect(303, '/login');
         }
     }
 
     if (!sessionUser.admin) {
-        throw error(403, "Unauthorized.")
+        error(403, "Unauthorized.");
     }
 
     return {
@@ -29,7 +29,7 @@ export const load = (async ({ locals, params }) => {
 
 export const actions = {
     back: async (event) => {
-        throw redirect(303, '/appeals/');
+        redirect(303, '/appeals/');
     },
 
     claim: async (event) => {
@@ -43,7 +43,7 @@ export const actions = {
             return fail(500, { success: false, message: "Server failed to claim appeal."})
         }
 
-        throw redirect(303, '/appeals/' + appealId + '?message=claimed');
+        redirect(303, '/appeals/' + appealId + '?message=claimed');
     },
 
     accept: async (event) => {
@@ -70,7 +70,7 @@ export const actions = {
         }
 
         if (await revokePunishment((appeal.type == "Ban" ? "staffog_ban" : "staffog_mute"), appeal.pid, appeal.assigned, appeal.assigned_name + " (via Appeals)", comments.toString()) == false) {
-            throw redirect(303, '/appeals/' + appealId + '?message=closedrevokefail');
+            redirect(303, '/appeals/' + appealId + '?message=closedrevokefail');
         }
 
         let revokeTask: RevokePunishmentTask = {
@@ -79,7 +79,7 @@ export const actions = {
         };
 
         await queueTask("unpunish", JSON.stringify(revokeTask));
-        throw redirect(303, '/appeals/' + appealId + '?message=closed');
+        redirect(303, '/appeals/' + appealId + '?message=closed');
     },
 
     reject: async (event) => {
@@ -95,6 +95,6 @@ export const actions = {
             return fail(500, { success: false, closeMessage: "Server failed to close appeal."})
         }
 
-        throw redirect(303, '/appeals/' + appealId + '?message=closed');
+        redirect(303, '/appeals/' + appealId + '?message=closed');
     }
 }

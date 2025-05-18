@@ -9,7 +9,7 @@ export const load = async ({ params, fetch, }) => {
     if (resMute.status == 200) {
         mute = await resMute.json();
     } else {
-        throw error(404, "Punishment not found.")
+        error(404, "Punishment not found.");
     }
 
     const resOnline = await fetch("/backend/public/onlinestats");
@@ -18,7 +18,7 @@ export const load = async ({ params, fetch, }) => {
     if (resOnline.status == 200) {
         online = await resOnline.json();
     } else {
-        throw error(500, "Couldn't get server status.")
+        error(500, "Couldn't get server status.");
     }
 
     return {

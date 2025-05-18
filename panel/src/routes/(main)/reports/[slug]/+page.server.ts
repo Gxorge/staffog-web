@@ -10,9 +10,9 @@ export const load = (async ({ locals, params }) => {
 
     if (!check.allow) {
         if (check.logout) {
-            throw redirect(303, '/login/out/silent');
+            redirect(303, '/login/out/silent');
         } else {
-            throw redirect(303, '/login');
+            redirect(303, '/login');
         }
     }
 
@@ -23,7 +23,7 @@ export const load = (async ({ locals, params }) => {
 
 export const actions = {
     back: async (event) => {
-        throw redirect(303, '/reports/');
+        redirect(303, '/reports/');
     },
 
     claim: async (event) => {
@@ -37,7 +37,7 @@ export const actions = {
             return fail(500, { success: false, message: "Server failed to claim report."})
         }
 
-        throw redirect(303, '/reports/' + reportId + '?message=claimed');
+        redirect(303, '/reports/' + reportId + '?message=claimed');
     },
 
     accept: async (event) => {
@@ -53,7 +53,7 @@ export const actions = {
             return fail(500, { success: false, closeMessage: "Server failed to close report."})
         }
 
-        throw redirect(303, '/reports/' + reportId + '?message=closed');
+        redirect(303, '/reports/' + reportId + '?message=closed');
     },
 
     reject: async (event) => {
@@ -69,6 +69,6 @@ export const actions = {
             return fail(500, { success: false, closeMessage: "Server failed to close report."})
         }
 
-        throw redirect(303, '/reports/' + reportId + '?message=closed');
+        redirect(303, '/reports/' + reportId + '?message=closed');
     }
 }

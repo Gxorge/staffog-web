@@ -10,5 +10,5 @@ export const load = (async ({ cookies }) => {
         maxAge: 0
     });
 
-    throw redirect(302, "/login");
+    redirect(302, "/login");
 }) satisfies PageServerLoad;
