@@ -46,6 +46,6 @@
             <button class="button is-primary">Login</button>
         </div>
         <br>
-        <p>Got an activation code? <a href="/login/activate">Click here to active your account</a>.</p>
+        <p>Got an activation code? <a href="/login/activate">Click here to activate your account</a>.</p>
     </section>
 </form>

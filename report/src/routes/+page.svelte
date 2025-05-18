@@ -11,7 +11,7 @@
         <div class="column">
             <div class="content has-text-centered">
                 <p><b>Has someone broken the rules?</b></p>
-                <a class="button is-link" href="/submit">Submit an report</a>
+                <a class="button is-link" href="/submit">Submit a report</a>
             </div>
         </div>
         <div class="column">
