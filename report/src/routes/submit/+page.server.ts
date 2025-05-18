@@ -40,7 +40,7 @@ export const actions = {
             if (!eviType || !eviData) {
                 let allowNoEvi = event.cookies.get("allowNoEvi");
                 if (!allowNoEvi) {
-                    /* @migration task: add path argument */ event.cookies.set("allowNoEvi", "true", { 'path': '/' });
+                    event.cookies.set("allowNoEvi", "true", { 'path': '/' });
                     return fail(500, { success: false, message: "Please complete the evidence boxes. If you created too many boxes, please press submit again and the form will be accepted." });
                 } else {
                     continue;
@@ -74,7 +74,7 @@ export const actions = {
             return fail(500, { success: false, message: "Please check the offender's username, have they ever joined the server?" });
         }
 
-        /* @migration task: add path argument */ event.cookies.delete("allowNoEvi", { 'path': '/' });
+        event.cookies.delete("allowNoEvi", { 'path': '/' });
         let code = await submitReport(offenderUuid, userUuid, offence, reason, evidence, (!crid ? null : Number(crid)));
         if (!code) {
             return fail(500, { success: false, message: "Server failed to submit report, please try again later." });
