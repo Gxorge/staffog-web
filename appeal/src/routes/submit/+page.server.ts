@@ -8,8 +8,8 @@ export const actions = {
         const data = await event.request.formData();
         let username = data.get('username');
 
-        event.cookies.delete('punishments');
-        event.cookies.delete('selected');
+        /* @migration task: add path argument */ event.cookies.delete('punishments');
+        /* @migration task: add path argument */ event.cookies.delete('selected');
 
         if (!username) {
             return fail(400, { stage: 1, success: false, message: "Please enter your username." });
@@ -31,10 +31,10 @@ export const actions = {
             return fail(400, { stage: 1, success: false, message: "You do not have any active or appealable punishments." });
         }
 
-        event.cookies.set('punishments', JSON.stringify(punishments, (key, value) => 
-        typeof value === 'bigint'
-            ? value.toString()
-            : value))
+        /* @migration task: add path argument */ event.cookies.set('punishments', JSON.stringify(punishments, (key, value) => 
+                typeof value === 'bigint'
+                    ? value.toString()
+                    : value))
 
         return { stage: 2, success: true, punishments: punishments }
     },
@@ -68,10 +68,10 @@ export const actions = {
             return fail(400, { stage: 2, success: false, message: "Please select a punishment", punishments: punishments });
         }
 
-        event.cookies.set('selected', JSON.stringify(selectedPunishment, (key, value) => 
-        typeof value === 'bigint'
-            ? value.toString()
-            : value))
+        /* @migration task: add path argument */ event.cookies.set('selected', JSON.stringify(selectedPunishment, (key, value) => 
+                typeof value === 'bigint'
+                    ? value.toString()
+                    : value))
 
         return { stage: 3, success: true, punishment: selectedPunishment };
     },
@@ -99,8 +99,8 @@ export const actions = {
             return fail(400, { stage: 3, success: false, message: "Failed to submit appeal, please try again later.", punishment: selectedPunishment });
         }
 
-        event.cookies.delete('punishments');
-        event.cookies.delete('selected');
+        /* @migration task: add path argument */ event.cookies.delete('punishments');
+        /* @migration task: add path argument */ event.cookies.delete('selected');
 
         let taskDetails: NewAppealTask = {
             id: Number(code),
@@ -109,6 +109,6 @@ export const actions = {
         };
         await queueTask("newappeal", JSON.stringify(taskDetails));
 
-        throw redirect(303, "/done?ref=" + code);
+        redirect(303, "/done?ref=" + code);
     },
 }
