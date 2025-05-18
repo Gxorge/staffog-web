@@ -3,14 +3,19 @@
     import SideNav from "$lib/SideNav.svelte";
     import type { LayoutData } from "./$types";
 
-    export let data: LayoutData;
+    interface Props {
+        data: LayoutData;
+        children?: import('svelte').Snippet;
+    }
+
+    let { data, children }: Props = $props();
 </script>
 
 <main>
     <div class="columns">
         <SideNav userInfo={data.sessionUser} />
         <div class="column">
-            <slot/>
+            {@render children?.()}
         </div>
     </div>
 </main>

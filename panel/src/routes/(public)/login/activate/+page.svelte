@@ -1,6 +1,10 @@
 <script lang="ts">
     import type { ActionData } from './$types';
-    export let form: ActionData;
+    interface Props {
+        form: ActionData;
+    }
+
+    let { form }: Props = $props();
 </script>   
 
 <svelte:head>

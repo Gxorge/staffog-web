@@ -5,9 +5,13 @@
 
     let currentTime = new Date().getTime();
 
-    export let form: ActionData;
-    export let entry: PunishEntry;
-    export let type: string;
+    interface Props {
+        form: ActionData;
+        entry: PunishEntry;
+        type: string;
+    }
+
+    let { form, entry, type }: Props = $props();
 
     function redirect(loc: string) {
         window.location.href = loc;

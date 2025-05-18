@@ -3,15 +3,26 @@
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
     import { assign } from "svelte/internal";
 
-    export let appealEntry: AppealEntry;
-    export let punishEntry: PunishEntry;
-    export let back: string;
-    export let myUUID: string;
-    export let message: string | null;
-    export let formData: FormData;
+    interface Props {
+        appealEntry: AppealEntry;
+        punishEntry: PunishEntry;
+        back: string;
+        myUUID: string;
+        message: string | null;
+        formData: FormData;
+    }
+
+    let {
+        appealEntry,
+        punishEntry,
+        back,
+        myUUID,
+        message,
+        formData = $bindable()
+    }: Props = $props();
 
     let currentTime = new Date().getTime();
-    let unclaimText = "Unclaim"
+    let unclaimText = $state("Unclaim")
 
     function redirect(loc: string) {
         window.location.href = loc;
@@ -125,7 +136,7 @@
                     <label class="label">
                         Please review the player's comments, reach a verdict and put your comments below.
                         <br>
-                        <textarea name="comments" class="textarea" placeholder="Please provide as much detail as needed."/>
+                        <textarea name="comments" class="textarea" placeholder="Please provide as much detail as needed."></textarea>
                     </label>
                 </div>
     
@@ -136,18 +147,18 @@
             </form>
             <br>
             <div class="buttons is-right">
-                <button class="button" on:click={() => redirect(back)}>Back</button>
-                <button class="button is-warning" on:click={unclaimAppeal}>{unclaimText}</button>
+                <button class="button" onclick={() => redirect(back)}>Back</button>
+                <button class="button is-warning" onclick={unclaimAppeal}>{unclaimText}</button>
             </div>
         {:else}
             <div class="buttons is-right">
-                <button class="button" on:click={() => redirect(back)}>Back</button>
+                <button class="button" onclick={() => redirect(back)}>Back</button>
                 {#if appealEntry.assigned == null && appealEntry.open}
                     <form method="post">
                         <button class="button is-success" formaction="?/claim">Claim</button>
                     </form>
                 {:else if appealEntry.open}
-                    <button class="button is-warning" on:click={unclaimAppeal}>{unclaimText}</button>
+                    <button class="button is-warning" onclick={unclaimAppeal}>{unclaimText}</button>
                 {/if}
             </div>
         {/if}

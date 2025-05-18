@@ -2,8 +2,12 @@
     import type { PunishEntry } from '$lib/types';
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
 
-    export let entryList: Array<PunishEntry>;
-    export let punishType: string;
+    interface Props {
+        entryList: Array<PunishEntry>;
+        punishType: string;
+    }
+
+    let { entryList, punishType }: Props = $props();
 
     function redirect(id: bigint) {
         window.location.href = "/" + punishType + "/" + id;
@@ -33,7 +37,7 @@
                     <td>{p.by_name}</td>
                     <td>{getReadableDate(p.time)}</td>
                     <td>
-                        <button class="button is-primary" on:click={() => redirect(p.id)}>Manage</button>
+                        <button class="button is-primary" onclick={() => redirect(p.id)}>Manage</button>
                     </td>
                 </tr>
             {/each}

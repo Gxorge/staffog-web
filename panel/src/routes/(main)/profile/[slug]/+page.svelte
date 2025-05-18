@@ -2,14 +2,18 @@
     import type { PageData } from './$types';
     import PunishTable from '$lib/PunishTable.svelte';
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
 
-    let viewableBans = data.punishments.bans;
+    let { data }: Props = $props();
+
+    let viewableBans = $state(data.punishments.bans);
     if (viewableBans.length > 9) {
         viewableBans = viewableBans.slice(0, 9)
     }
 
-    let viewableMutes = data.punishments.mutes;
+    let viewableMutes = $state(data.punishments.mutes);
     if (viewableMutes.length > 9) {
         viewableMutes = viewableMutes.slice(0, 9)
     }

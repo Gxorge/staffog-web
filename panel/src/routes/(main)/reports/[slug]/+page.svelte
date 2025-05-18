@@ -2,8 +2,12 @@
     import ReportView from "$lib/ReportView.svelte";
     import type { PageData } from "./$types";
 
-    export let data: PageData;
-    export let form: FormData;
+    interface Props {
+        data: PageData;
+        form: FormData;
+    }
+
+    let { data, form }: Props = $props();
 </script>
 
 <svelte:head>

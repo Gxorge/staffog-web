@@ -1,7 +1,11 @@
 <script lang="ts">
     import type { AuthResult } from "./types";
 
-    export let userInfo: AuthResult;
+    interface Props {
+        userInfo: AuthResult;
+    }
+
+    let { userInfo }: Props = $props();
 </script>
 
 <div class="column is-1 staffog-sidenav">

@@ -2,7 +2,11 @@
     import type { AppealEntry } from '$lib/types';
     import { getReadableDate } from './sharedfuncs';
 
-    export let entryList: Array<AppealEntry>;
+    interface Props {
+        entryList: Array<AppealEntry>;
+    }
+
+    let { entryList }: Props = $props();
 
     function redirect(id: number) {
         window.location.href = "/appeals/" + id;
@@ -36,7 +40,7 @@
                     {/if}
                     <td>{getReadableDate(p.time)}</td>
                     <td>
-                        <button class="button is-primary" on:click={() => redirect(p.id)}>Manage</button>
+                        <button class="button is-primary" onclick={() => redirect(p.id)}>Manage</button>
                     </td>
                 </tr>
             {/each}

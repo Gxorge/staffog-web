@@ -1,8 +1,12 @@
 <script lang="ts">
     import type { OnlineStats, PunishStats } from '$lib/types';
 
-    export let onlineStats: OnlineStats;
-    export let punishStats: PunishStats;
+    interface Props {
+        onlineStats: OnlineStats;
+        punishStats: PunishStats;
+    }
+
+    let { onlineStats, punishStats }: Props = $props();
 </script>
 
 <nav class="level">

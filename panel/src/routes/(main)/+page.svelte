@@ -3,10 +3,14 @@
     import StatsLevel from "$lib/StatsLevel.svelte";
     import type { PageData } from './$types';
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
 
-    let searchError = "";
-    let searchInput = "";
+    let { data }: Props = $props();
+
+    let searchError = $state("");
+    let searchInput = $state("");
 
 
     function redirect(loc: string) {
@@ -70,7 +74,7 @@
                       <input bind:value={searchInput} class="input" type="text" placeholder="Enter a player name or UUID">
                     </div>
                     <div class="control">
-                        <button on:click={search} class="button is-link">Search</button>
+                        <button onclick={search} class="button is-link">Search</button>
                     </div>
                 </div>
             </section>

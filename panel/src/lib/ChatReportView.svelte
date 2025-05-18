@@ -2,12 +2,16 @@
     import { getReadableDate } from "./sharedfuncs";
     import type { ChatReportEntry } from "./types";
 
-    export let entry: ChatReportEntry;
-    export let back: string;
+    interface Props {
+        entry: ChatReportEntry;
+        back: string;
+    }
 
-    let showAll: boolean = true;
-    let toggleAllButtonText: string = "Show only from the reported";
-    let toggleAllButtonType: string = "is-danger";
+    let { entry, back }: Props = $props();
+
+    let showAll: boolean = $state(true);
+    let toggleAllButtonText: string = $state("Show only from the reported");
+    let toggleAllButtonType: string = $state("is-danger");
 
     function toggleShowAll() {
         if (showAll) {
@@ -48,7 +52,7 @@
         </table>  
 
         <h2>Messages</h2>
-        <button class="button {toggleAllButtonType}" on:click={() => toggleShowAll()}>{toggleAllButtonText}</button>
+        <button class="button {toggleAllButtonType}" onclick={() => toggleShowAll()}>{toggleAllButtonText}</button>
         <br>
         <br>
         <table class="table is-centered is-bordered is-striped">
@@ -84,7 +88,7 @@
         </table>     
         
         <div class="buttons is-right">
-            <button class="button" on:click={() => goBack()}>Back</button>
+            <button class="button" onclick={() => goBack()}>Back</button>
         </div>
     </div>
 </section>

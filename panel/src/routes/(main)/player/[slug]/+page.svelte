@@ -2,7 +2,11 @@
     import type { PageData } from './$types';
     import PunishTable from '$lib/PunishTable.svelte';
 
-    export let data: PageData;
+    interface Props {
+        data: PageData;
+    }
+
+    let { data }: Props = $props();
 </script>
 
 <svelte:head>

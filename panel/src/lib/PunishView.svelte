@@ -2,11 +2,21 @@
     import type { PunishEntry } from "./types";
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
 
-    export let paramResult: string | null;
-    export let entry: PunishEntry;
-    export let type: string;
-    export let admin: boolean;
-    export let back: string;
+    interface Props {
+        paramResult: string | null;
+        entry: PunishEntry;
+        type: string;
+        admin: boolean;
+        back: string;
+    }
+
+    let {
+        paramResult,
+        entry,
+        type,
+        admin,
+        back
+    }: Props = $props();
 
     let currentTime = new Date().getTime();
 
@@ -80,11 +90,11 @@
         </table>
 
         <div class="buttons is-right">
-            <button class="button" on:click={() => redirect(back)}>Back</button>
+            <button class="button" onclick={() => redirect(back)}>Back</button>
             {#if entry.active}
-                <button class="button is-link" on:click={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/edit")}>Edit {type}</button> 
+                <button class="button is-link" onclick={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/edit")}>Edit {type}</button> 
                 {#if admin}
-                    <button class="button is-danger" on:click={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/revoke")}>Revoke {type}</button>
+                    <button class="button is-danger" onclick={() => redirect("/" + type.toLowerCase() + "s/" + entry.id + "/revoke")}>Revoke {type}</button>
                 {/if}
             {/if}
         </div>
