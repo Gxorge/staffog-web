@@ -29,7 +29,7 @@
 
             <div class="field">
                 <label class="label">
-                    Refernce Number
+                    Reference Number
                     <div class="control">
                         <input name="ref" class="input " type="text" placeholder="Your reference number">
                     </div>
