@@ -44,7 +44,7 @@ export const actions = {
 
         let ipInfo = await isIpRecognised(uuid, event.getClientAddress());
         if (!ipInfo) {
-            return fail(400, { success: false, message: "Security check failed (code 1). Please contact an administrator."})
+            return fail(400, { success: false, message: "Security check failed (IP not recognized). Please contact an administrator."})
         }
 
         if (!ipInfo.panel_acknowledged) {

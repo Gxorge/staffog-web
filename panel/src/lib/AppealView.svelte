@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { AppealEntry, PunishEntry } from "./types";
     import { getReadableMillis, getReadableDate } from './sharedfuncs';
-    import { assign } from "svelte/internal";
 
     interface Props {
         appealEntry: AppealEntry;
