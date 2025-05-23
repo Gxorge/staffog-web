@@ -54,8 +54,8 @@ export const actions = {
         }
 
         let activePunishment = await isActivelyPunished(userInfo.uuid);
-        if (activePunishment == null) {
-            return fail(400, { success:false, message: "Security check failed (code 1). Please contact an administrator."})
+        if (activePunishment != null) {
+            return fail(400, { success:false, message: "Security check failed (active punishment). Please contact an administrator."})
         }
 
         if (activePunishment) {
